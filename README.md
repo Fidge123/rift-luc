@@ -18,7 +18,11 @@ League Unlock Challenge uses data about your League of Legend games provided by 
 
 ### Database scripts ###
 
-There are scripts available that will create the necessary postgres tables and populate it with data. To use them it is recommened to setup a virtualenv for it first.
+<TODO>
+
+### Python scripts ###
+
+There are some scripts available that will populate the database with data. To use them it is recommended to setup a virtualenv for it first.
 
 Bash:
 ``` bash
