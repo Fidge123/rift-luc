@@ -125,7 +125,7 @@ bower install
 
 ## Setup ##
 
-### Start database server ###
+### Start PostgreSQL server ###
 
 Read how to start the database server: http://www.postgresql.org/docs/current/static/server-start.html
 
@@ -142,6 +142,14 @@ Once you have a database created, run the DatabaseCreation.sql script to create 
 ``` bash
 psql -d luc -a -f db_scripts/DatabaseCreation.sql
 ```
+
+### Start PostgREST server ###
+
+Start PostgREST server on default port 3000
+```
+postgrest postgres://localhost:5432/luc -a postgres -j <secret>
+```
+For more information read http://postgrest.com/install/server/
 
 ### Python scripts ###
 
