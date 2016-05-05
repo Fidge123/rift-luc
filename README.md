@@ -129,9 +129,19 @@ bower install
 
 Read how to start the database server: http://www.postgresql.org/docs/current/static/server-start.html
 
+Once the server is started, create a database
+
+``` bash
+createdb luc
+```
+
 ### Database scripts ###
 
-<TODO>
+Once you have a database created, run the DatabaseCreation.sql script to create the table schema
+
+``` bash
+psql -d luc -a -f db_scripts/DatabaseCreation.sql
+```
 
 ### Python scripts ###
 
