@@ -2,7 +2,7 @@ import requests
 import json
 #import psycopg2
 
-key_file = open('key.txt')
+key_file = open('key')
 key = key_file.readline()
 payload = {'api_key': key}
 r = requests.get('https://euw.api.pvp.net/api/lol/euw/v1.2/champion', params=payload)
