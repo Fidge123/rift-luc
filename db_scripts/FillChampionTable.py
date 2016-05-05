@@ -4,37 +4,41 @@
 import json
 import requests
 
-with open('key') as f:
-    KEY = {'api_key': f.read().splitlines()[0]}
+with open('key') as file:
+    KEY = {'api_key': file.readline().strip()}
 
-REGION = 'euw'
-API = 'https://' + REGION + '.api.pvp.net/api/lol/' + REGION
-CHAMPS = json.loads(requests.get(API + '/v1.2/champion', params=KEY).text)['champions']
-S_CHAMPS = json.loads(requests.get('https://global.api.pvp.net/api/lol/static-data/' + REGION + '/v1.2/champion',
-                                   params=KEY).text)['data']
-championId = []
-championFtp = []
-championYordle = []
-championStealth = []
-championVoid = []
-championName = []
-YORDLES = ['Amumu', 'Corki', 'Gnar', 'Heimer', 'Lulu', 'Kennen', 'Poppy',
-           'Rumble', 'Teemo', 'Tristana', 'Veigar', 'Ziggs']
-STEALTH = ['Akali', 'Evelynn', 'Khazix', 'Rengar', 'LeBlanc', 'Shaco',
-           'Talon', 'Teemo', 'Twitch', 'Vayne', 'Wukong']
+YORDLES = ['Amumu', 'Corki', 'Gnar', 'Heimer', 'Lulu', 'Kennen', 'Poppy', 'Rumble', 'Teemo',
+           'Tristana', 'Veigar', 'Ziggs']
+STEALTH = ['Akali', 'Evelynn', 'Khazix', 'Rengar', 'LeBlanc', 'Shaco', 'Talon', 'Teemo', 'Twitch',
+           'Vayne', 'Wukong']
 VOID = ['Chogath', 'Kassadin', 'Khazix', 'KogMaw', 'Malzahar', 'RekSai', 'Velkoz']
 
-for name in S_CHAMPS:
-    championName.append(name)
+def fill_champion_table(region):
+    """Main function"""
 
-championName.sort()
+    api = 'https://' + region + '.api.pvp.net/api/lol/' + region
+    static = 'https://global.api.pvp.net/api/lol/static-data/' + region
 
-for i, champ in enumerate(CHAMPS):
-    championId.append(champ['id'])
-    championFtp.append(champ['freeToPlay'])
-    championYordle.append(championName[i] in YORDLES)
-    championStealth.append(championName[i] in STEALTH)
-    championVoid.append(championName[i] in VOID)
+    champs = json.loads(requests.get(api + '/v1.2/champion', params=KEY).text)['champions']
+    s_champs = json.loads(requests.get(static + '/v1.2/champion', params=KEY).text)['data']
 
+    champions = []
+    names = []
+
+    for name in s_champs:
+        names.append(name)
+
+    names.sort()
+
+    for i, champ in enumerate(champs):
+        name = names[i]
+        champions.append({
+            'name': name,
+            'id': champ['id'],
+            'f2p': champ['freeToPlay'],
+            'yordle': name in YORDLES,
+            'stealth': name in STEALTH,
+            'void': name in VOID
+        })
 #conn_string = "host='localhost' dbname='my_database' user='postgres' password='secret'"
 #conn = psycopg2.connect(conn_string)
