@@ -153,6 +153,11 @@ For more information read http://postgrest.com/install/server/
 
 ### Python scripts ###
 
+Too use the python scripts, you will need to create key-file with your Riot API Key first.
+
+``` bash
+echo ENTER-YOUR-KEY-HERE > KEY
+```
 <TODO>
 
 ## Deployment ##
