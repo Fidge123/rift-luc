@@ -53,6 +53,6 @@ def fill_champion_table(region):
     query = "INSERT INTO champion(id, name, ftp, yordle, stealth, void) VALUES (%s, %s, %s, %s, %s, %s);"
     for champ in champions:
         data = (champ['id'], champ['name'], champ['f2p'],
-        champ['yordle'], champ['stealth'], champ['void'])
+                champ['yordle'], champ['stealth'], champ['void'])
         cursor.execute(query, data)
         conn.commit()
