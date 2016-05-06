@@ -9,6 +9,8 @@ with open('key') as file:
     KEY = {'api_key': file.readline().strip()}
 
 with open('db_config') as file:
+    HOST = file.readline().strip()
+    DBNAME = file.readline().strip()
     USER = file.readline().strip()
     PASS = file.readline().strip()
 
@@ -45,7 +47,7 @@ def fill_champion_table(region):
             'stealth': name in STEALTH,
             'void': name in VOID
         })
-    conn_string = "host='localhost' dbname='API-Challenge' user='" + USER + "' password='" + PASS + "'"
+    conn_string = "host='" + HOST + "' dbname='" + DBNAME + "' user='" + USER + "' password='" + PASS + "'"
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
     query = "INSERT INTO champion(id, name, ftp, yordle, stealth, void) VALUES (%s, %s, %s, %s, %s, %s);"
