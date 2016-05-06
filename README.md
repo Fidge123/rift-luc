@@ -158,6 +158,16 @@ Too use the python scripts, you will need to create key-file with your Riot API 
 ``` bash
 echo ENTER-YOUR-KEY-HERE > KEY
 ```
+
+To use the python scripts that are updating/filling your database, you will need to create a db_config file with your hostadress of your postgresql server, the name of your db, the user_name for your database and your password for this user.
+All this information should each be stored per line.
+
+``` bash
+echo HOSTADRESS >> DB_CONFIG
+echo DB_NAME >> DB_CONFIG
+echo USER_NAME >> DB_CONFIG
+echo PASSWORD >> DB_CONFIG
+```
 <TODO>
 
 ## Deployment ##
