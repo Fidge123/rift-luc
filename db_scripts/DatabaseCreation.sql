@@ -1,4 +1,4 @@
-CREATE TABLE player (
+﻿CREATE TABLE player (
     id integer NOT NULL,
     leaguename character varying(255) NOT NULL,
 	region character varying(255) NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE halloffame (
 	points integer,
 	evaluation bytea,
 	playerid integer,
-	region character varying(255) NOT NULL,
+	region character varying(255) NOT NULL
 );
 
 CREATE TABLE game (
