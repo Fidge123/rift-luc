@@ -5,3 +5,4 @@ bower_components
 .publish/
 key
 .env
+db_scripts/db_config
