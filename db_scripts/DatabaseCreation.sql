@@ -34,7 +34,7 @@
 );
 
 CREATE TABLE achievement (
-	id integer NOT NULL,
+	id serial NOT NULL,
 	name character varying(255),
 	description bytea,
 	points integer,
@@ -42,7 +42,7 @@ CREATE TABLE achievement (
 );
 
 CREATE TABLE repeatable (
-	id integer NOT NULL,
+	id serial NOT NULL,
 	name character varying(255),
 	description bytea,
 	points integer,
@@ -50,7 +50,7 @@ CREATE TABLE repeatable (
 );
 
 CREATE TABLE halloffame (
-	id integer NOT NULL,
+	id serial NOT NULL,
 	name character varying(255),
 	description bytea,
 	points integer,
