@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Request new game data and save it to the database"""
+"""Take achievements and save it to the database"""
 
 import psycopg2
 
