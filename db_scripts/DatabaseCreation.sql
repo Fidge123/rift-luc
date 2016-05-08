@@ -54,10 +54,10 @@ CREATE TABLE halloffame (
 	id serial NOT NULL,
 	name text,
 	description text,
-	points integer,
-	evaluation text,
-	playerid integer,
-	region text NOT NULL
+	pointsfirst integer,
+	pointssecond integer,
+	pointsthird integer,
+	evaluation text
 );
 
 CREATE TABLE game (
@@ -88,6 +88,13 @@ CREATE TABLE player_repeatable (
 	region text NOT NULL,
 	repeatableid integer NOT NULL,
 	amount integer
+);
+
+CREATE TABLE player_halloffame (
+	playerid integer NOT NULL,
+	region text NOT NULL,
+	hofid integer NOT NULL,
+	place integer
 );
 
 CREATE TABLE game_repeatable_player (
@@ -124,6 +131,9 @@ ALTER TABLE ONLY player_achievement_match
 
 ALTER TABLE ONLY player_repeatable
     ADD CONSTRAINT player_repeatable_pkey PRIMARY KEY (playerid,region,repeatableid);
+	
+ALTER TABLE ONLY player_halloffame
+    ADD CONSTRAINT player_halloffame_pkey PRIMARY KEY (playerid,region,hofid);
 
 ALTER TABLE ONLY game_repeatable_player
     ADD CONSTRAINT game_repeatable_player_pkey PRIMARY KEY (playerid,region,repeatableid,gameid);
