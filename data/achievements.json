@@ -1,0 +1,213 @@
+[{
+    "description": "Play 3 yordles",
+    "points": 5,
+    "name": "Yordle Lover"
+}, {
+    "description": "Play 3 different yordles",
+    "points": 5,
+    "name": "Yordle Power"
+}, {
+    "description": "Win a game",
+    "points": 5,
+    "name": "First Win!"
+}, {
+    "description": "Win 10 games",
+    "points": 10,
+    "name": "Get the hang of it"
+}, {
+    "description": "Win 20 games",
+    "points": 20,
+    "name": "Enemy slayer!"
+}, {
+    "description": "Win 30 games",
+    "points": 40,
+    "name": "Bath in their blood!"
+}, {
+    "description": "Win with 10 different chamos",
+    "points": 10,
+    "name": "One-Trick Pony"
+}, {
+    "description": "Win with 20 different champs",
+    "points": 20,
+    "name": "Look at that champion pool!"
+}, {
+    "description": "Win with 30 different champs",
+    "points": 40,
+    "name": "Gotta master them all!"
+}, {
+    "description": "Kill 3000 minions",
+    "points": 10,
+    "name": "Allowance money"
+}, {
+    "description": "Kill 4000 minions",
+    "points": 20,
+    "name": "Bling Bling"
+}, {
+    "description": "Kill 5000 minions",
+    "points": 40,
+    "name": "PVE master"
+}, {
+    "description": "Get 100 assists",
+    "points": 10,
+    "name": "I am helping out!"
+}, {
+    "description": "Get 200 assists",
+    "points": 20,
+    "name": "AoE damage FTW!"
+}, {
+    "description": "Get 300 assists",
+    "points": 40,
+    "name": "Gangplank master"
+}, {
+    "description": "Place 100 wards",
+    "points": 10,
+    "name": "Life savior"
+}, {
+    "description": "Place 200 wards",
+    "points": 20,
+    "name": "Support main"
+}, {
+    "description": "Place 300 wards",
+    "points": 40,
+    "name": "Nothing can hide from your sight"
+}, {
+    "description": "Place 500 wards",
+    "points": -40,
+    "name": "CHEATER!"
+}, {
+    "description": "Kill 50 wards",
+    "points": 10,
+    "name": "Ward seeker"
+}, {
+    "description": "Kill 100 wards",
+    "points": 20,
+    "name": "Vision denied"
+}, {
+    "description": "Kill 200 wards",
+    "points": 40,
+    "name": "Living in the darkness"
+}, {
+    "description": "Win 6 games in a row",
+    "points": 10,
+    "name": "Lucky run"
+}, {
+    "description": "Win 8 games in a row",
+    "points": 20,
+    "name": "Climbing the ladder"
+}, {
+    "description": "Win 10 games in a row",
+    "points": 40,
+    "name": "Strike!"
+}, {
+    "description": "Lose 5 games in a row",
+    "points": 10,
+    "name": "Pity Points"
+}, {
+    "description": "Win a game in under 20:30",
+    "points": 10,
+    "name": "Surrender at 20"
+}, {
+    "description": "Win a game without byuing a recommended item",
+    "points": 10,
+    "name": "Rebel"
+}, {
+    "description": "Win a classic 5v5",
+    "points": 5,
+    "name": "Classic"
+}, {
+    "description": "Win a classic 3v3",
+    "points": 5,
+    "name": "Vilemaw > Nashor"
+}, {
+    "description": "Win an ARAM",
+    "points": 5,
+    "name": "No time to farm"
+}, {
+    "description": "Win a special mode",
+    "points": 5,
+    "name": "Play for fun"
+}, {
+    "description": "Win a game in each gamemode",
+    "points": 10,
+    "name": "Master all the modes"
+}, {
+    "description": "Play the tutorial",
+    "points": 5,
+    "name": "Thronmail on Ashe FTW"
+}, {
+    "description": "Win a game with at least 4 items with an active",
+    "points": 5,
+    "name": "Because 4 abilities are not enough"
+}, {
+    "description": "Spend 1.000.000 gold",
+    "points": 20,
+    "name": "Millionaire"
+}, {
+    "description": "Get a killingspree of 4",
+    "points": 10,
+    "name": "Four in a row"
+}, {
+    "description": "Get a killingspree of 8",
+    "points": 20,
+    "name": "Champions are for farming"
+}, {
+    "description": "Get a killingspree of 12",
+    "points": 40,
+    "name": "PVP Master"
+}, {
+    "description": "Play a game without flash",
+    "points": 5,
+    "name": "No need to flash"
+}, {
+    "description": "Have a game with a duration of over 60 min",
+    "points": 5,
+    "name": "1h game"
+}, {
+    "description": "Play 3 stealth champs",
+    "points": 5,
+    "name": "Can not see me"
+}, {
+    "description": "Play 3 different stealth champs",
+    "points": 5,
+    "name": "Catch me if you can"
+}, {
+    "description": "Play 3 void champs",
+    "points": 5,
+    "name": "Oh darn!"
+}, {
+    "description": "Play 3 different void champs",
+    "points": 5,
+    "name": "Dweller of the void"
+}, {
+    "description": "Win 1 game with Teemo",
+    "points": 10,
+    "name": "Teemo on duty!"
+}, {
+    "description": "Win 2 games with Teemo",
+    "points": 10,
+    "name": "Stop it!"
+}, {
+    "description": "Win 3 games with Teemo",
+    "points": 0,
+    "name": "Told you!"
+}, {
+    "description": "Play Teemo 2 times",
+    "points": -5,
+    "name": "Nobody likes Teemo"
+}, {
+    "description": "Play Teemo 3 times",
+    "points": -5,
+    "name": "I mean it"
+}, {
+    "description": "Play Teemo 4 times",
+    "points": -5,
+    "name": "Are you happy now?"
+}, {
+    "description": "Unlock the base level of all achievements",
+    "points": 20,
+    "name": "Unlock Pro"
+}, {
+    "description": "Win a game with all of the free-to-play champs",
+    "points": 20,
+    "name": "Free elo"
+}]

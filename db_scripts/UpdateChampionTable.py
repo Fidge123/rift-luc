@@ -47,28 +47,33 @@ def update_champion_table(region):
             'stealth': name in STEALTH,
             'void': name in VOID
         })
-    conn_string = "host='" + HOST + "' dbname='" + DBNAME + "' user='" + USER + "' password='" + PASS + "'"
+    conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
     query = "SELECT name FROM champion;"
     cursor.execute(query)
     db_champs = cursor.fetchall()
+
     for name in names:
         if (name,) not in db_champs:  #new champion
             champ = champions[names.index(name)]
-            cursor2 = conn.cursor()
             query2 = "INSERT INTO champion(id,name,ftp,yordle,stealth,void) VAlUES (%s,%s,%s,%s,%s,%s);"
             data = (champ['id'], champ['name'], champ['f2p'],
-                champ['yordle'], champ['stealth'], champ['void'])
-            cursor2.execute(query2, data)
+                    champ['yordle'], champ['stealth'], champ['void'])
+            cursor.execute(query2, data)
             conn.commit()
-    cursor3 = conn.cursor()
+
     for champ in champions:
         query = "SELECT ftp FROM champion WHERE id ='" + str(champ['id']) + "'"
-        cursor3.execute(query)
-        champ2 = cursor3.fetchone()
-        if (champ['f2p'] ,)!= champ2:  #new f2p rotation
-            cursor4 = conn.cursor()
+        cursor.execute(query)
+        champ2 = cursor.fetchone()
+        if (champ['f2p'],) != champ2:  #new f2p rotation
             query2 = "UPDATE champion SET (ftp) = ('" + str(champ['f2p']) + "') WHERE id ='" + str(champ['id']) + "';"
-            cursor4.execute(query2)
+            cursor.execute(query2)
             conn.commit()
+
+    cursor.close()
+    conn.close()
+
+if __name__ == '__main__':
+    update_champion_table('euw')

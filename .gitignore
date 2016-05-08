@@ -6,3 +6,4 @@ bower_components
 key
 .env
 db_scripts/db_config
+db_config

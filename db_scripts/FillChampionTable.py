@@ -47,7 +47,7 @@ def fill_champion_table(region):
             'stealth': name in STEALTH,
             'void': name in VOID
         })
-    conn_string = "host='" + HOST + "' dbname='" + DBNAME + "' user='" + USER + "' password='" + PASS + "'"
+    conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
     query = "INSERT INTO champion(id, name, ftp, yordle, stealth, void) VALUES (%s, %s, %s, %s, %s, %s);"
@@ -55,4 +55,10 @@ def fill_champion_table(region):
         data = (champ['id'], champ['name'], champ['f2p'],
                 champ['yordle'], champ['stealth'], champ['void'])
         cursor.execute(query, data)
-        conn.commit()
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+if __name__ == '__main__':
+    fill_champion_table('euw')
