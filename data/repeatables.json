@@ -1,0 +1,49 @@
+[{
+    "description": "Win the game",
+    "points": 1
+}, {
+    "description": "10+ kills",
+    "points": 1
+}, {
+    "description": "Triple kill",
+    "points": 1
+}, {
+    "description": "Quadra kill",
+    "points": 2
+}, {
+    "description": "Penta kill",
+    "points": 5
+}, {
+    "description": "10+ assists",
+    "points": 1
+}, {
+    "description": "Kill 300 minions",
+    "points": 1
+}, {
+    "description": "Kill 400 minions",
+    "points": 2
+}, {
+    "description": "Kill 500 minions",
+    "points": 3
+}, {
+    "description": "Deal most damage in the game",
+    "points": 1
+}, {
+    "description": "KDA >= 10",
+    "points": 1
+}, {
+    "description": "KDA >= 20",
+    "points": 3
+}, {
+    "description": "Win with 0 deaths",
+    "points": 1
+}, {
+    "description": "Steal 10+ jungle creeps",
+    "points": 1
+}, {
+    "description": "Gain Hand of Baron buff",
+    "points": 1
+}, {
+    "description": "Gain Crest of Crushing Wrath buff",
+    "points": 1
+}]

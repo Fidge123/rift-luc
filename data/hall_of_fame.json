@@ -1,0 +1,41 @@
+[{
+    "description": "Highest KDA",
+    "firstPlace": 20,
+    "secondPlace": 10,
+    "thirdPlace": 5
+}, {
+    "description": "Most assists",
+    "firstPlace": 20,
+    "secondPlace": 10,
+    "thirdPlace": 5
+}, {
+    "description": "Most kills",
+    "firstPlace": 20,
+    "secondPlace": 10,
+    "thirdPlace": 5
+}, {
+    "description": "Most damage taken",
+    "firstPlace": 20,
+    "secondPlace": 10,
+    "thirdPlace": 5
+}, {
+    "description": "Most minions killed",
+    "firstPlace": 20,
+    "secondPlace": 10,
+    "thirdPlace": 5
+}, {
+    "description": "Highest CS per minute",
+    "firstPlace": 20,
+    "secondPlace": 10,
+    "thirdPlace": 5
+}, {
+    "description": "Highest Crit",
+    "firstPlace": 20,
+    "secondPlace": 10,
+    "thirdPlace": 5
+}, {
+    "description": "Longest duration of CC dealt",
+    "firstPlace": 20,
+    "secondPlace": 10,
+    "thirdPlace": 5
+}]
