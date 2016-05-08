@@ -15,14 +15,16 @@
     <!-- TODO -->
     <iron-ajax
         id="modeLoader" auto
-        url="http://localhost:3000/achievement"
+        url="http://localhost:3000/halloffame"
         last-response="{{halloffame}}"></iron-ajax>
     <h1>Hall of Fame</h1>
     <template is="dom-repeat" items="[[halloffame]]">
         <paper-material id="{{index}}" elevation="1">
             <h1>[[item.name]]</h1>
             <p>[[item.description]]</p>
-            <p>Points: [[item.points]]</p>
+            <p>First: [[item.pointsfirst]]</p>
+            <p>Second: [[item.pointssecond]]</p>
+            <p>Third: [[item.pointsthird]]</p>
         </paper-material>
     </template>
   </template>
