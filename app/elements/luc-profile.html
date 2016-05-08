@@ -39,8 +39,11 @@
         .overview > * {
             float: left;
             width: 33%;
+            text-decoration: none;
         }
         .overview > * > paper-material {
+            background: #22436E;
+            color: #fff;
             width: 250px;
             height: 250px;
         }
@@ -101,7 +104,7 @@
             </div>
         </div>
         <div class="overview">
-            <div class="achievements">
+            <a data-route="achievements" href="{{baseUrl}}achievements" class="achievements">
                 <paper-material elevation="1">
                     <div class="title">
                         Achievements
@@ -111,8 +114,8 @@
                         22 of 45
                     </div>
                 </paper-material>
-            </div>
-            <div class="halloffame">
+            </a>
+            <a data-route="achievements" href="{{baseUrl}}halloffame" class="halloffame">
                 <paper-material elevation="1">
                     <div class="title">
                         Hall of Fame
@@ -122,8 +125,8 @@
                         stuff
                     </div>
                 </paper-material>
-            </div>
-            <div class="repeatables">
+            </a>
+            <a data-route="achievements" href="{{baseUrl}}repeatables" class="repeatables">
                 <paper-material elevation="1">
                     <div class="title">
                         Repeatables
@@ -133,7 +136,7 @@
                         1600 Points
                     </div>
                 </paper-material>
-            </div>
+            </a>
         </div>
         <div class="league">
             League: Korean Overlords
