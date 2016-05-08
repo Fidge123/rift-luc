@@ -7,3 +7,5 @@ key
 .env
 db_scripts/db_config
 db_config
+*.pyc
+db_scripts/__pycache__
