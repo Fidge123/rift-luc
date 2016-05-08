@@ -4,6 +4,7 @@
 	region text NOT NULL,
 	email text,
 	password text NOT NULL,
+    iconid integer,
 	verified boolean,
     leagueid integer,
 	wins integer,
