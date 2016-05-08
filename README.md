@@ -109,6 +109,7 @@ brew install node
 
 Download and install the binary: https://nodejs.org/en/download/
 
+**After installing:**
 
 Once Node.JS and NPM are installed you can run
 ```
