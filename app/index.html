@@ -42,10 +42,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <a data-route="home" href="{{baseUrl}}">
                 <span class="top title">LUC</span>
             </a>
+            <a data-route="achievements" href="{{baseUrl}}achievements">Achievements</a>
+            <a data-route="halloffame" href="{{baseUrl}}halloffame">Hall of Fame</a>
+            <a data-route="repeatables" href="{{baseUrl}}repeatables">Repeatables</a>
         </paper-toolbar>
 
         <iron-pages attr-for-selected="data-route" selected="{{route}}">
             <section data-route="home">
+                <!-- <luc-profile></luc-profile> -->
+            </section>
+            <section data-route="achievements">
+                <luc-achievements></luc-achievements>
+            </section>
+            <section data-route="halloffame">
+                <!-- <luc-halloffame></luc-halloffame> -->
+            </section>
+            <section data-route="repeatables">
+                <!-- <luc-repeatables></luc-repeatables> -->
             </section>
         </iron-pages>
     </paper-scroll-header-panel>
