@@ -1,0 +1,45 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
+<dom-module id="luc-repeatables">
+  <template>
+    <style>
+        :host {
+            display: block;
+        }
+        h1 {
+            display: block;
+            width: 50%;
+        }
+    </style>
+    <iron-ajax
+        id="modeLoader" auto
+        url="http://localhost:3000/achievement"
+        last-response="{{games}}"></iron-ajax>
+    <h1>Repeatables</h1>
+    <template is="dom-repeat" items="[[games]]">
+        <paper-material id="{{index}}" elevation="1">
+            <h1>[[item.name]]</h1>
+            <p>[[item.description]]</p>
+            <p>Points: [[item.points]]</p>
+        </paper-material>
+    </template>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'luc-repeatables',
+
+        properties: {
+            games: {
+                type: Array,
+                notifies: true
+            }
+        }
+      });
+    })();
+  </script>
+</dom-module>

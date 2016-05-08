@@ -1,0 +1,169 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
+<dom-module id="luc-profile">
+  <template>
+    <style>
+        :host {
+            display: block;
+        }
+        .header {
+            display: block;
+            height: 120px;
+            width: 100%;
+            padding-top: 20px;
+            margin-bottom: 40px;
+        }
+        .header > .icon {
+            float: left;
+            padding: 0px 20px 0px 10px;
+            height: 120px;
+        }
+        .header > .name {
+            float: left;
+            font-size: 60px;
+            max-width: 80%;
+            overflow: hidden;
+            margin-top: 25px;
+        }
+        .header > .points {
+            float: right;
+            font-size: 40px;
+            margin-top: 35px;
+        }
+        .overview {
+            display: block;
+            height: 250px;
+            margin-bottom: 40px;
+        }
+        .overview > * {
+            float: left;
+            width: 33%;
+        }
+        .overview > * > paper-material {
+            width: 250px;
+            height: 250px;
+        }
+        .overview > * > paper-material > .symbol {
+            margin-left: 75px;
+            width: 100px;
+        }
+        .overview > * > paper-material > .title {
+            text-align: center;
+            line-height: 50px;
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        .overview > * > paper-material > .stats {
+            text-align: center;
+            line-height: 90px;
+            font-size: 30px;
+        }
+        .league {
+            margin-left: 10px;
+            line-height: 90px;
+            font-size: 40px;
+        }
+        .row {
+            display: block;
+            height: 50px;
+            margin-bottom: 0;
+        }
+        .row > .left {
+            float: left;
+            padding: 10px;
+        }
+        .row > .points {
+            float: right;
+        }
+        .row > .points::before {
+            content: "Points: ";
+        }
+        .big {
+            font-size: 28px;
+        }
+        .small {
+            font-size: 24px;
+        }
+    </style>
+    <iron-ajax
+        id="modeLoader" auto
+        url="http://localhost:3000/achievement"
+        last-response="{{achievements}}"></iron-ajax>
+    <paper-material elevation="1">
+        <div class="header">
+            <img class="icon" src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/588.png"/>
+            <div class="name">
+                Fidge1234
+            </div>
+            <div class="points">
+                100 Points
+            </div>
+        </div>
+        <div class="overview">
+            <div class="achievements">
+                <paper-material elevation="1">
+                    <div class="title">
+                        Achievements
+                    </div>
+                    <img class="symbol" src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/588.png"/>
+                    <div class="stats">
+                        22 of 45
+                    </div>
+                </paper-material>
+            </div>
+            <div class="halloffame">
+                <paper-material elevation="1">
+                    <div class="title">
+                        Hall of Fame
+                    </div>
+                    <img class="symbol" src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/588.png"/>
+                    <div class="stats">
+                        stuff
+                    </div>
+                </paper-material>
+            </div>
+            <div class="repeatables">
+                <paper-material elevation="1">
+                    <div class="title">
+                        Repeatables
+                    </div>
+                    <img class="symbol" src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/588.png"/>
+                    <div class="stats">
+                        1600 Points
+                    </div>
+                </paper-material>
+            </div>
+        </div>
+        <div class="league">
+            League: Korean Overlords
+        </div>
+        <div class="leaderboard">
+            <template is="dom-repeat" items="[[achievements]]">
+                <paper-material id="{{index}}" class="row" elevation="1">
+                    <div class="left big">[[item.name]]</div>
+                    <div class="left small">[[item.description]]</div>
+                    <div class="points small">[[item.points]]</div>
+                </paper-material>
+            </template>
+        </div>
+    </paper-material>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'luc-profile',
+
+        properties: {
+            achievements: {
+                type: Array,
+                notifies: true
+            }
+        }
+      });
+    })();
+  </script>
+</dom-module>

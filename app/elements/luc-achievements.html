@@ -16,6 +16,7 @@
         id="modeLoader" auto
         url="http://localhost:3000/achievement"
         last-response="{{achievements}}"></iron-ajax>
+    <h1>Achievements</h1>
     <template is="dom-repeat" items="[[achievements]]">
         <paper-material id="{{index}}" elevation="1">
             <h1>[[item.name]]</h1>
