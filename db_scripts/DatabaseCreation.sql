@@ -1,9 +1,9 @@
 ﻿CREATE TABLE player (
     id integer NOT NULL,
-    leaguename character varying(255) NOT NULL,
-	region character varying(255) NOT NULL,
-	email character varying(255),
-	password character varying(255) NOT NULL,
+    leaguename text NOT NULL,
+	region text NOT NULL,
+	email text,
+	password text NOT NULL,
 	verified boolean,
     leagueid integer,
 	wins integer,
@@ -35,40 +35,40 @@
 
 CREATE TABLE achievement (
 	id serial NOT NULL,
-	name character varying(255),
-	description bytea,
+	name text,
+	description text,
 	points integer,
-	evaluation bytea
+	evaluation text
 );
 
 CREATE TABLE repeatable (
 	id serial NOT NULL,
-	name character varying(255),
-	description bytea,
+	name text,
+	description text,
 	points integer,
-	evaluation bytea
+	evaluation text
 );
 
 CREATE TABLE halloffame (
 	id serial NOT NULL,
-	name character varying(255),
-	description bytea,
+	name text,
+	description text,
 	points integer,
-	evaluation bytea,
+	evaluation text,
 	playerid integer,
-	region character varying(255) NOT NULL
+	region text NOT NULL
 );
 
 CREATE TABLE game (
 	id integer NOT NULL,
 	playerid integer NOT NULL,
-	region character varying(255) NOT NULL,
-	json bytea
+	region text NOT NULL,
+	json text
 );
 
 CREATE TABLE champion (
 	id integer NOT NULL,
-	name character varying(255),
+	name text,
 	ftp boolean,
 	yordle boolean,
 	stealth boolean,
@@ -77,28 +77,28 @@ CREATE TABLE champion (
 
 CREATE TABLE player_achievement_match (
 	playerid integer NOT NULL,
-	region character varying(255) NOT NULL,
+	region text NOT NULL,
 	achievementid integer NOT NULL,
 	gameid integer NOT NULL
 );
 
 CREATE TABLE player_repeatable (
 	playerid integer NOT NULL,
-	region character varying(255) NOT NULL,
+	region text NOT NULL,
 	repeatableid integer NOT NULL,
 	amount integer
 );
 
 CREATE TABLE game_repeatable_player (
 	playerid integer NOT NULL,
-	region character varying(255) NOT NULL,
+	region text NOT NULL,
 	repeatableid integer NOT NULL,
 	gameid integer NOT NULL
 );
 
 CREATE TABLE player_champion (
 	playerid integer NOT NULL,
-	region character varying(255) NOT NULL,
+	region text NOT NULL,
 	championid integer NOT NULL,
 	amount integer
 );
