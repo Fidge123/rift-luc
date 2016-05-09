@@ -21,10 +21,10 @@
     "points": 1
 }, {
     "description": "Kill 400 minions",
-    "points": 2
+    "points": 1
 }, {
     "description": "Kill 500 minions",
-    "points": 3
+    "points": 1
 }, {
     "description": "Deal most damage in the game",
     "points": 1
@@ -33,7 +33,7 @@
     "points": 1
 }, {
     "description": "KDA >= 20",
-    "points": 3
+    "points": 2
 }, {
     "description": "Win with 0 deaths",
     "points": 1

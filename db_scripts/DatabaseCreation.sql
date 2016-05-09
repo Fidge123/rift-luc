@@ -87,7 +87,7 @@ CREATE TABLE player_repeatable (
 	playerid integer NOT NULL,
 	region text NOT NULL,
 	repeatableid integer NOT NULL,
-	amount integer DEFAULT 0,
+	amount integer DEFAULT 0
 );
 
 CREATE TABLE player_halloffame (
