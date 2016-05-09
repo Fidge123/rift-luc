@@ -4,9 +4,9 @@
 import json
 import psycopg2
 import requests
-
 import PlayerChampion
 import UpdatePoints
+import Player
 
 with open('key') as file:
     KEY = {'api_key': file.readline().strip()}
@@ -51,9 +51,9 @@ def get_recent_matches(player_id, region):
             data = (match_id, player_id, region, json.dumps(match))
             cursor.execute(query, data)
             conn.commit()
-
             UpdatePoints.calculate_points(player_id, match_id, region, match)
             PlayerChampion.update(match_id, player_id, region, match)
+            Player.updateAttributes(match_id, player_id, region, match)
 
     cursor.close()
     conn.close()

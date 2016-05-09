@@ -26,8 +26,8 @@ def update(match_id, player_id, region, match):
         conn.commit()
     else:
         amount = cursor.fetchone()[0] + 1
-        query = "UPDATE player_champion SET (amount) = (%s);"
-        data = (amount,)
+        query = "UPDATE player_champion SET (amount) = (%s) WHERE playerid = %s AND region = %s AND championid = %s;"
+        data = (amount,player_id,region,match["championId"])
         cursor.execute(query, data)
         conn.commit()
         
