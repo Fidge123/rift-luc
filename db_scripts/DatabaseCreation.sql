@@ -61,7 +61,7 @@ CREATE TABLE halloffame (
 );
 
 CREATE TABLE game (
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	playerid integer NOT NULL,
 	region text NOT NULL,
 	json text
@@ -80,7 +80,7 @@ CREATE TABLE player_achievement_match (
 	playerid integer NOT NULL,
 	region text NOT NULL,
 	achievementid integer NOT NULL,
-	gameid integer NOT NULL
+	gameid bigint NOT NULL
 );
 
 CREATE TABLE player_repeatable (
@@ -101,7 +101,7 @@ CREATE TABLE game_repeatable_player (
 	playerid integer NOT NULL,
 	region text NOT NULL,
 	repeatableid integer NOT NULL,
-	gameid integer NOT NULL
+	gameid bigint NOT NULL
 );
 
 CREATE TABLE player_champion (
@@ -125,6 +125,15 @@ ALTER TABLE ONLY halloffame
 
 ALTER TABLE ONLY champion
     ADD CONSTRAINT champion_pkey PRIMARY KEY (id);
+	
+ALTER TABLE ONLY game
+	ADD CONSTRAINT game_pkey PRIMARY KEY (id, playerid, region);
+	
+ALTER TABLE ONLY game
+    ADD CONSTRAINT game_playerid_fkey FOREIGN KEY (playerid) REFERENCES player(id);
+	
+ALTER TABLE ONLY game
+    ADD CONSTRAINT game_region_fkey FOREIGN KEY (region) REFERENCES player(region);
 
 ALTER TABLE ONLY player_achievement_match
     ADD CONSTRAINT player_achievement_match_pkey PRIMARY KEY (playerid,region,achievementid,gameid);
