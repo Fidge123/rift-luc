@@ -15,27 +15,29 @@ with open('db_config') as file:
     PASS = file.readline().strip()
 
 def get_all_recent_matches():
+    """Get recent matches for all players"""
     conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
     query = "SELECT id, region FROM player;"
     cursor.execute(query)
     players = cursor.fetchall()
+
     for player in players:
         player_id = player[0]
         region = player[1]
-        get_recent_matches(player_id,region)
-    
-def get_recent_matches(player_id, region):
+        get_recent_matches(player_id, region)
 
+def get_recent_matches(player_id, region):
+    """Retrieve all matches that are not yet in the database for a given player id"""
     api = 'https://' + region + '.api.pvp.net/api/lol/' + region
 
     matches = json.loads(requests.get(api + '/v1.3/game/by-summoner/' + str(player_id) + '/recent', params=KEY).text)["games"]
-    
+
     conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
-    
+
     for match in matches:
         match_id = match["gameId"]
         query = "SELECT id, playerid, region FROM game WHERE id ='" + str(match_id) + "' AND playerid = '" + str(player_id) + "' AND region = '" + region + "';"
