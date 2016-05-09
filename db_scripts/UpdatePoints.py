@@ -81,9 +81,13 @@ def calculate_repeatable(player_id, match_id, region, data, game, cursor):
         stats = data["stats"]
         if (i == 1 and stats["win"] or
                 i == 2 and stats.get("championsKilled", 0) >= 10 or
-                stats.get("largestMultiKill", 0) == i or
+                i == 3 and stats.get("largestMultiKill", 0) == 3 or
+                i == 4 and stats.get("largestMultiKill", 0) == 4 or
+                i == 5 and stats.get("largestMultiKill", 0) == 5 or
                 i == 6 and stats.get("assists", 0) >= 10 or
-                stats.get("minionsKilled", 0) >= (i - 4) * 100 or
+                i == 7 and stats.get("minionsKilled", 0) >= 300 or
+                i == 8 and stats.get("minionsKilled", 0) >= 400 or
+                i == 9 and stats.get("minionsKilled", 0) >= 500 or
                 i == 10 and dealt_highest_damage(stats.get("totalDamageDealtToChampions", 0), game.get("participants", [])) or
                 i == 11 and kda_greater_than(10, stats) or
                 i == 12 and kda_greater_than(20, stats) or
