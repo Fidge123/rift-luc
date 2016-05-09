@@ -14,8 +14,11 @@ with open('db_config') as file:
     USER = file.readline().strip()
     PASS = file.readline().strip()
 
-R_SELECT = "SELECT id, points FROM repeatable;"
+### Common queries ###
 P_UPDATE = "UPDATE player SET points = points + %s WHERE id = %s;"
+
+### Repeatables ###
+R_SELECT = "SELECT id, points FROM repeatable;"
 PR_SELECT = "SELECT amount FROM player_repeatable WHERE playerid = %s AND region = %s AND repeatableid = %s;"
 PR_INSERT = "INSERT INTO player_repeatable(amount, playerid, region, repeatableid) VALUES (%s,%s,%s,%s);"
 PR_UPDATE = "UPDATE player_repeatable SET amount = amount + %s WHERE playerid = %s AND region = %s AND repeatableid = %s;"
@@ -75,10 +78,10 @@ def calculate_repeatable(player_id, match_id, region, data, game, cursor):
 
     cursor.execute(R_SELECT)
     repeatables = cursor.fetchall()
+    stats = data["stats"]
 
     for repeatable in repeatables:
         i = repeatable[0]
-        stats = data["stats"]
         if (i == 1 and stats["win"] or
                 i == 2 and stats.get("championsKilled", 0) >= 10 or
                 i == 3 and stats.get("largestMultiKill", 0) == 3 or
@@ -97,15 +100,42 @@ def calculate_repeatable(player_id, match_id, region, data, game, cursor):
                 i == 16 and killed_vilemaw(data["teamId"], game["teams"])):
             update_repeatable_tables(cursor, player_id, match_id, region, i, repeatable[1])
 
+### Achievements ###
+A_SELECT = "SELECT id, points FROM achievement;"
+P_SELECT = "SELECT * FROM player WHERE id = %s;"
+PAM_SELECT = "SELECT gameid FROM player_achievement_match WHERE playerid = %s AND region = %s AND achievementid = %s;"
+PAM_INSERT = "INSERT INTO player_achievement_match(playerid, region, achievementid, gameid) VALUES (%s,%s,%s,%s);"
+C_SELECT = "SELECT id, ftp, yordle, stealth, void FROM champion;"
+
+# def three_yordles(player_id, cursor):
+#
+#
+# def calculate_achievements(player_id, match_id, region, data, game, cursor):
+#     """Calculate achievements"""
+#     cursor.execute(CHAMP_SELECT)
+#     champions = cursor.fetchall()
+#     cursor.execute(P_SELECT, (player_id,))
+#     player = cursor.fetchone()
+#     cursor.execute(A_SELECT)
+#     achievements = cursor.fetchall()
+#     stats = data["stats"]
+#
+#     for achievement in achievements:
+#         i = achievement[0]
+#         if (i == 1 and player["yordleamount"] >= 3 or
+#             i == 2 and three_yordles(player_id, cursor)):
+
+
+
 def calculate_points(player_id, match_id, region, data):
     """Main function"""
 
     api = 'https://' + region + '.api.pvp.net/api/lol/' + region
     response = requests.get(api + '/v2.2/match/' + str(match_id), params=KEY)
 
-    if response.status_code != 200:
+    while response.status_code != 200:
         time.sleep(1)
-        return calculate_points(player_id, match_id, region, data)
+        response = requests.get(api + '/v2.2/match/' + str(match_id), params=KEY)
 
     game = json.loads(response.text)
     conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
@@ -113,7 +143,9 @@ def calculate_points(player_id, match_id, region, data):
     cursor = conn.cursor()
 
     calculate_repeatable(player_id, match_id, region, data, game, cursor)
-
     conn.commit()
+    # calculate_achievements(player_id, match_id, region, data, game, cursor)
+    # conn.commit()
+
     cursor.close()
     conn.close()
