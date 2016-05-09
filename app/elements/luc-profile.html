@@ -93,8 +93,8 @@
     </style>
     <iron-ajax
         id="modeLoader" auto
-        url="http://localhost:3000/achievement"
-        last-response="{{achievements}}"></iron-ajax>
+        url="http://localhost:3000/player"
+        last-response="{{players}}"></iron-ajax>
     <paper-material elevation="1">
         <div class="header">
             <img class="icon" src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/588.png"/>
@@ -144,10 +144,10 @@
             League: Korean Overlords
         </div>
         <div class="leaderboard">
-            <template is="dom-repeat" items="[[achievements]]">
+            <template is="dom-repeat" items="[[players]]">
                 <paper-material id="{{index}}" class="row" elevation="1">
-                    <div class="left big">[[item.name]]</div>
-                    <div class="left small">[[item.description]]</div>
+                    <div class="left big">[[item.leaguename]]</div>
+                    <div class="left small">[[item.id]]</div>
                     <div class="points small">[[item.points]]</div>
                 </paper-material>
             </template>
@@ -163,7 +163,7 @@
         is: 'luc-profile',
 
         properties: {
-            achievements: {
+            players: {
                 type: Array,
                 notifies: true
             }
