@@ -4,6 +4,7 @@
 import json
 import psycopg2
 import requests
+import player_champion
 
 with open('key') as file:
     KEY = {'api_key': file.readline().strip()}
@@ -42,11 +43,13 @@ def get_recent_matches(player_id, region):
         match_id = match["gameId"]
         query = "SELECT id, playerid, region FROM game WHERE id ='" + str(match_id) + "' AND playerid = '" + str(player_id) + "' AND region = '" + region + "';"
         cursor.execute(query)
+       
         if cursor.rowcount == 0: #new match found
             query = "INSERT INTO game(id, playerid, region, json) VALUES (%s,%s,%s,%s);"
             data = (match_id, player_id, region, json.dumps(match))
             cursor.execute(query, data)
             conn.commit()
+            player_champion.update(match_id, player_id, region, match)
 
     cursor.close()
     conn.close()
