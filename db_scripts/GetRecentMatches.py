@@ -44,7 +44,7 @@ def get_recent_matches(player_id, region):
         cursor.execute(query)
         if cursor.rowcount == 0: #new match found
             query = "INSERT INTO game(id, playerid, region, json) VALUES (%s,%s,%s,%s);"
-            data = (match_id, player_id, region, str(match))
+            data = (match_id, player_id, region, json.dumps(match))
             cursor.execute(query, data)
             conn.commit()
 

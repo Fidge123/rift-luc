@@ -5,33 +5,33 @@
 	email text,
 	password text NOT NULL,
     iconid integer,
-	verified boolean,
-    leagueid integer,
-	wins integer,
-	winstreak integer,
-	losestreak integer,
-	minion integer,
-	wardkills integer,
-	wardplaced integer,
-	kills integer,
-	deaths integer,
-	assists integer,
-	gold integer,
-	largestkillingspree integer,
-	csperminute real,
-	highestcrit integer,
-	ccduration integer,
-	gamemodewins integer,
-	earliestkill integer,
-	earliestturret integer,
-	earliest200cc integer,
-	stealthamount integer,
-	voidamount integer,
-	yordleamount integer,
-	teemoamount integer,
-	teemowin integer,
-	champpoints integer,
-	points integer
+	verified boolean DEFAULT FALSE,
+    leagueid integer NOT NULL,
+	wins integer DEFAULT 0,
+	winstreak integer DEFAULT 0,
+	losestreak integer DEFAULT 0,
+	minion integer DEFAULT 0,
+	wardkills integer DEFAULT 0,
+	wardplaced integer DEFAULT 0,
+	kills integer DEFAULT 0,
+	deaths integer DEFAULT 0,
+	assists integer DEFAULT 0,
+	gold integer DEFAULT 0,
+	largestkillingspree integer DEFAULT 0,
+	csperminute real DEFAULT 0.0,
+	highestcrit integer DEFAULT 0,
+	ccduration integer DEFAULT 0,
+	gamemodewins integer DEFAULT 0,
+	earliestkill integer DEFAULT 0,
+	earliestturret integer DEFAULT 0,
+	earliest200cs integer DEFAULT 0,
+	stealthamount integer DEFAULT 0,
+	voidamount integer DEFAULT 0,
+	yordleamount integer DEFAULT 0,
+	teemoamount integer DEFAULT 0,
+	teemowin integer DEFAULT 0,
+	champpoints integer DEFAULT 0,
+	points integer DEFAULT 0
 );
 
 CREATE TABLE achievement (
@@ -54,9 +54,9 @@ CREATE TABLE halloffame (
 	id serial NOT NULL,
 	name text,
 	description text,
-	pointsfirst integer,
-	pointssecond integer,
-	pointsthird integer,
+	pointsfirst integer DEFAULT 20,
+	pointssecond integer DEFAULT 10,
+	pointsthird integer DEFAULT 5,
 	evaluation text
 );
 
@@ -87,7 +87,7 @@ CREATE TABLE player_repeatable (
 	playerid integer NOT NULL,
 	region text NOT NULL,
 	repeatableid integer NOT NULL,
-	amount integer
+	amount integer DEFAULT 0,
 );
 
 CREATE TABLE player_halloffame (
@@ -108,7 +108,7 @@ CREATE TABLE player_champion (
 	playerid integer NOT NULL,
 	region text NOT NULL,
 	championid integer NOT NULL,
-	amount integer
+	amount integer DEFAULT 0
 );
 
 ALTER TABLE ONLY player
@@ -125,13 +125,13 @@ ALTER TABLE ONLY halloffame
 
 ALTER TABLE ONLY champion
     ADD CONSTRAINT champion_pkey PRIMARY KEY (id);
-	
+
 ALTER TABLE ONLY game
 	ADD CONSTRAINT game_pkey PRIMARY KEY (id, playerid, region);
-	
+
 ALTER TABLE ONLY game
     ADD CONSTRAINT game_playerid_fkey FOREIGN KEY (playerid) REFERENCES player(id);
-	
+
 ALTER TABLE ONLY game
     ADD CONSTRAINT game_region_fkey FOREIGN KEY (region) REFERENCES player(region);
 
@@ -140,7 +140,7 @@ ALTER TABLE ONLY player_achievement_match
 
 ALTER TABLE ONLY player_repeatable
     ADD CONSTRAINT player_repeatable_pkey PRIMARY KEY (playerid,region,repeatableid);
-	
+
 ALTER TABLE ONLY player_halloffame
     ADD CONSTRAINT player_halloffame_pkey PRIMARY KEY (playerid,region,hofid);
 
