@@ -23,8 +23,8 @@ def register_player(name, region, email, password, leagueid):
     conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
-    query = "INSERT INTO player(id, leaguename, region, email, password, leagueid) VALUES (%s,%s,%s,%s,%s,%s);"
-    data = (player["id"], player["name"], region.lower(), email, password, leagueid)
+    query = "INSERT INTO player(id, leaguename, region, email, password, iconid, leagueid) VALUES (%s,%s,%s,%s,%s,%s,%s);"
+    data = (player["id"], player["name"], region.lower(), email, password, player["profileIconId"], leagueid)
     cursor.execute(query, data)
     conn.commit()
     cursor.close()
