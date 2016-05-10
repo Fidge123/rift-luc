@@ -46,6 +46,8 @@ def dealt_highest_damage(damage, participants):
 
 def kda_greater_than(limit, stats):
     if "numDeaths" in stats:
+        if stats["numDeaths"] == 0:
+            stats["numDeaths"] = 1
         if (stats.get("assists", 0) + stats.get("championsKilled", 0)) / stats["numDeaths"] > limit:
             return True
     return False
@@ -54,8 +56,8 @@ def stole_ten_monster(champ_id, team_id, participants):
     """Check if player stole 10 jungle creeps"""
     for participant in participants:
         if (participant["teamId"] == team_id
-            and participant["championId"] == champ_id
-            and participant["stats"].get("neutralMinionsKilledEnemyJungle", 0) > 10):
+                and participant["championId"] == champ_id
+                and participant["stats"].get("neutralMinionsKilledEnemyJungle", 0) > 10):
             return True
     return False
 
@@ -102,30 +104,108 @@ def calculate_repeatable(player_id, match_id, region, data, game, cursor):
 
 ### Achievements ###
 A_SELECT = "SELECT id, points FROM achievement;"
-P_SELECT = "SELECT * FROM player WHERE id = %s;"
+P_SELECT = "SELECT wins,minion,assists,wardplaced,wardkills,winstreak,losestreak,gold,largestkillingspree,stealthamount,voidamount,yordleamount,teemowin,teemoamount FROM player WHERE id = %s;"
 PAM_SELECT = "SELECT gameid FROM player_achievement_match WHERE playerid = %s AND region = %s AND achievementid = %s;"
 PAM_INSERT = "INSERT INTO player_achievement_match(playerid, region, achievementid, gameid) VALUES (%s,%s,%s,%s);"
-C_SELECT = "SELECT id, ftp, yordle, stealth, void FROM champion;"
+CHAMP_COUNT = "SELECT COUNT(championid) FROM player_champion WHERE playerid=%s;"
+YORDLE_SELECT = "SELECT COUNT(c.id) FROM champion AS c, player_champion AS pc WHERE yordle=TRUE AND c.id=pc.championid AND pc.playerid=%s;"
+STEALTH_SELECT = "SELECT COUNT(c.id) FROM champion AS c, player_champion AS pc WHERE stealth=TRUE AND c.id=pc.championid AND pc.playerid=%s;"
+VOID_SELECT = "SELECT COUNT(c.id) FROM champion AS c, player_champion AS pc WHERE void=TRUE AND c.id=pc.championid AND pc.playerid=%s;"
+F2P_SELECT = "SELECT COUNT(c.id) FROM champion AS c, player_champion AS pc WHERE ftp=TRUE AND c.id=pc.championid AND pc.playerid=%s;"
 
-# def three_yordles(player_id, cursor):
-#
-#
-# def calculate_achievements(player_id, match_id, region, data, game, cursor):
-#     """Calculate achievements"""
-#     cursor.execute(CHAMP_SELECT)
-#     champions = cursor.fetchall()
-#     cursor.execute(P_SELECT, (player_id,))
-#     player = cursor.fetchone()
-#     cursor.execute(A_SELECT)
-#     achievements = cursor.fetchall()
-#     stats = data["stats"]
-#
-#     for achievement in achievements:
-#         i = achievement[0]
-#         if (i == 1 and player["yordleamount"] >= 3 or
-#             i == 2 and three_yordles(player_id, cursor)):
+def three_yordles(player_id, cursor):
+    """Check if player used at least 3 different yordles"""
+    cursor.execute(YORDLE_SELECT, (player_id,))
+    return cursor.fetchone()[0] >= 3
 
+def three_stealth(player_id, cursor):
+    """Check if player used at least 3 different stealth champs"""
+    cursor.execute(STEALTH_SELECT, (player_id,))
+    return cursor.fetchone()[0] >= 3
 
+def three_void(player_id, cursor):
+    """Check if player used at least 3 different void champs"""
+    cursor.execute(VOID_SELECT, (player_id,))
+    return cursor.fetchone()[0] >= 3
+
+def free_to_play(player_id, cursor):
+    """Check if player used at least 10 champions that are free to play"""
+    cursor.execute(F2P_SELECT, (player_id,))
+    return cursor.fetchone()[0] >= 10
+
+def update_achievement_tables(player_id, match_id, region, achievement_id, cursor):
+    """Insert achievement into table if it doesnt exist yet"""
+    cursor.execute(PAM_SELECT, (player_id, region, achievement_id))
+    if cursor.rowcount == 0:
+        cursor.execute(PAM_INSERT, (player_id, region, achievement_id, match_id))
+
+def calculate_achievements(player_id, match_id, region, data, game, cursor):
+    """Calculate achievements"""
+    cursor.execute(P_SELECT, (player_id,))
+    player = cursor.fetchone()
+    cursor.execute(CHAMP_COUNT, (player_id,))
+    champ_pool = cursor.fetchone()[0]
+    cursor.execute(A_SELECT)
+    achievements = cursor.fetchall()
+    stats = data["stats"]
+    funmodes = ["ODIN", "ONEFORALL", "ASCENSION", "FIRSTBLOOD", "KINGPORO"]
+
+    for achievement in achievements:
+        i = achievement[0]
+        if (i == 1 and player[11] >= 3 or # yordleamount
+                i == 2 and three_yordles(player_id, cursor) or
+                i == 3 and player[0] > 0 or # wins
+                i == 4 and player[0] >= 10 or
+                i == 5 and player[0] >= 20 or
+                i == 6 and player[0] >= 30 or
+                i == 7 and champ_pool > 10 or
+                i == 8 and champ_pool > 20 or
+                i == 9 and champ_pool > 30 or
+                i == 10 and player[1] > 3000 or # cs
+                i == 11 and player[1] > 4000 or
+                i == 12 and player[1] > 5000 or
+                i == 13 and player[2] > 100 or # assists
+                i == 14 and player[2] > 200 or
+                i == 15 and player[2] > 300 or
+                i == 16 and player[3] > 100 or # wardplaced
+                i == 17 and player[3] > 200 or
+                i == 18 and player[3] > 300 or
+                i == 19 and player[3] > 500 or
+                i == 20 and player[4] > 50 or # wardkills
+                i == 21 and player[4] > 100 or
+                i == 22 and player[4] > 200 or
+                i == 23 and player[5] > 6 or # winstreak
+                i == 24 and player[5] > 8 or
+                i == 25 and player[5] > 10 or
+                i == 26 and player[6] > 5 or # losestreak
+                i == 27 and game.get("matchDuration", 1500) < 1230 or
+                i == 28 and False or
+                i == 29 and stats["win"] and data.get("subType", "") == "NORMAL" or
+                i == 30 and stats["win"] and data.get("subType", "") == "NORMAL_3x3" or
+                i == 31 and stats["win"] and data.get("subType", "") == "ARAM_UNRANKED_5x5" or
+                i == 32 and stats["win"] and data.get("gameMode", "") in funmodes or
+                i == 33 and False or
+                i == 34 and data.get("gameMode", "") == "TUTORIAL" or
+                i == 35 and False or
+                i == 36 and player[7] > 1000000 or # gold
+                i == 37 and player[8] > 4 or # largestkillingspree
+                i == 38 and player[8] > 8 or
+                i == 39 and player[8] > 12 or
+                i == 40 and data.get("spell1", 4) != 4 and data.get("spell2", 4) != 4 or
+                i == 41 and game.get("matchDuration", 1500) < 3600 or
+                i == 42 and player[9] >= 3 or #stealth
+                i == 43 and three_stealth(player_id, cursor) or
+                i == 44 and player[10] >= 3 or # void
+                i == 45 and three_void(player_id, cursor) or
+                i == 46 and player[12] == 1 or # teemowin
+                i == 47 and player[12] == 2 or
+                i == 48 and player[12] == 3 or
+                i == 49 and player[13] == 2 or # teemoamount
+                i == 50 and player[13] == 3 or
+                i == 51 and player[13] == 4 or
+                i == 52 and False or
+                i == 53 and free_to_play(player_id, cursor)):
+            update_achievement_tables(player_id, match_id, region, i, cursor)
 
 def calculate_points(player_id, match_id, region, data):
     """Main function"""
@@ -147,8 +227,8 @@ def calculate_points(player_id, match_id, region, data):
 
     calculate_repeatable(player_id, match_id, region, data, game, cursor)
     conn.commit()
-    # calculate_achievements(player_id, match_id, region, data, game, cursor)
-    # conn.commit()
+    calculate_achievements(player_id, match_id, region, data, game, cursor)
+    conn.commit()
 
     cursor.close()
     conn.close()

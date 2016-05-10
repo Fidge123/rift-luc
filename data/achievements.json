@@ -23,15 +23,15 @@
     "points": 40,
     "name": "Bath in their blood!"
 }, {
-    "description": "Win with 10 different champs",
+    "description": "Play 10 different champs",
     "points": 10,
     "name": "One-Trick Pony"
 }, {
-    "description": "Win with 20 different champs",
+    "description": "Play 20 different champs",
     "points": 20,
     "name": "Look at that champion pool!"
 }, {
-    "description": "Win with 30 different champs",
+    "description": "Play 30 different champs",
     "points": 40,
     "name": "Gotta master them all!"
 }, {
@@ -207,7 +207,7 @@
     "points": 20,
     "name": "Unlock Pro"
 }, {
-    "description": "Win a game with all of the free-to-play champs",
+    "description": "Play a game with all of the free-to-play champs",
     "points": 20,
     "name": "Free Elo"
 }]

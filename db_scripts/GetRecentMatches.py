@@ -2,6 +2,7 @@
 """Take player data, request matches and save it to the database"""
 
 import json
+import time
 import psycopg2
 import requests
 import PlayerChampion
@@ -34,8 +35,16 @@ def get_all_recent_matches():
 def get_recent_matches(player_id, region):
     """Retrieve all matches that are not yet in the database for a given player id"""
     api = 'https://' + region + '.api.pvp.net/api/lol/' + region
+    response = requests.get(api + '/v1.3/game/by-summoner/' + str(player_id) + '/recent', params=KEY)
 
-    matches = json.loads(requests.get(api + '/v1.3/game/by-summoner/' + str(player_id) + '/recent', params=KEY).text)["games"]
+    while response.status_code != 200:
+        if response.status_code == 404:
+            return
+        print(str(response.status_code) + ": Request failed, waiting 10 seconds")
+        time.sleep(10)
+        response = requests.get(api + '/v1.3/game/by-summoner/' + str(player_id) + '/recent', params=KEY)
+
+    matches = json.loads(response.text)["games"]
 
     conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
     conn = psycopg2.connect(conn_string)
