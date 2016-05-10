@@ -134,7 +134,10 @@ def calculate_points(player_id, match_id, region, data):
     response = requests.get(api + '/v2.2/match/' + str(match_id), params=KEY)
 
     while response.status_code != 200:
-        time.sleep(1)
+        if response.status_code == 404:
+            return
+        print(str(response.status_code) + ": Request failed, waiting 10 seconds")
+        time.sleep(10)
         response = requests.get(api + '/v2.2/match/' + str(match_id), params=KEY)
 
     game = json.loads(response.text)
