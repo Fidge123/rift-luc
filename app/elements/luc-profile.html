@@ -42,7 +42,7 @@
             text-decoration: none;
         }
         .overview > * > paper-material {
-            background: #22436E;
+            background: #4079c4;
             color: #fff;
             width: 250px;
             height: 250px;
@@ -50,6 +50,7 @@
         .overview > * > paper-material > .symbol {
             margin-left: 75px;
             width: 100px;
+            height: 100px;
         }
         .overview > * > paper-material > .title {
             text-align: center;
@@ -95,6 +96,12 @@
         id="leaderboardLoaer" auto
         url="http://localhost:3000/player"
         params='{"order": "points.desc", "leagueid": "eq.0"}'
+        last-response="{{players}}"
+        on-response="handlePlayer"></iron-ajax>
+    <iron-ajax
+        id="leaderboardLoaer"
+        url="http://localhost:3000/player"
+        params='{"order": "points.desc", "leagueid": "eq.0"}'
         last-response="{{players}}"></iron-ajax>
     <paper-material elevation="1">
         <div class="header">
@@ -108,33 +115,33 @@
         </div>
         <div class="overview">
             <a data-route="achievements" href="{{baseUrl}}achievements" class="achievements">
-                <paper-material elevation="1">
+                <paper-material elevation="2">
                     <div class="title">
                         Achievements
                     </div>
-                    <img class="symbol" src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/588.png"/>
+                    <iron-image sizing="contain" class="symbol" src="images/achievements.png"></iron-image>
                     <div class="stats">
                         22 of 45
                     </div>
                 </paper-material>
             </a>
             <a data-route="achievements" href="{{baseUrl}}halloffame" class="halloffame">
-                <paper-material elevation="1">
+                <paper-material elevation="2">
                     <div class="title">
                         Hall of Fame
                     </div>
-                    <img class="symbol" src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/588.png"/>
+                    <iron-image sizing="contain" class="symbol" src="images/halloffame.png"></iron-image>
                     <div class="stats">
                         stuff
                     </div>
                 </paper-material>
             </a>
             <a data-route="achievements" href="{{baseUrl}}repeatables" class="repeatables">
-                <paper-material elevation="1">
+                <paper-material elevation="2">
                     <div class="title">
                         Repeatables
                     </div>
-                    <img class="symbol" src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/588.png"/>
+                    <iron-image sizing="contain" class="symbol" src="images/repeatables.png"></iron-image>
                     <div class="stats">
                         1600 Points
                     </div>
@@ -146,13 +153,17 @@
         </div>
         <div class="leaderboard">
             <template is="dom-repeat" items="[[players]]">
-                <paper-material id="{{index}}" class="row" elevation="1">
+                <paper-material class="row" elevation="1">
+                    <div class="left big">[[index]]. Place</div>
                     <div class="left big">[[item.leaguename]]</div>
-                    <div class="left small">[[item.id]]</div>
                     <div class="points small">[[item.points]]</div>
                 </paper-material>
             </template>
         </div>
+    </paper-material>
+
+    <paper-material elevation="1">
+        <a href='http://www.freepik.com/free-vector/award-icons_799927.htm' style="text-decoration:none;color:#888;">Designed using images by Freepik</a>
     </paper-material>
   </template>
 
@@ -166,6 +177,10 @@
         properties: {
             players: {
                 type: Array,
+                notifies: true
+            },
+            player: {
+                type: Object,
                 notifies: true
             }
         }
