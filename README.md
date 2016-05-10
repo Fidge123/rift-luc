@@ -1,3 +1,7 @@
+# WORK IN PROGRESS #
+
+Sadly we could not create a finished project within the timeframe of the API Challenge, so far the python scripts can fill the database correctly by using the API but have to be started by hand as of now. The frontend is mainly static and mocked, but we are looking forward to finishing it as it has been a lot of fun so far.
+
 # League Unlock Challenge #
 
 League Unlock Challenge uses data about your League of Legend games provided by the Riot Developer API to give you points for several kinds of achievements. You can form a league with friends for a fun competition to be the best at the League Unlock Challenge!
