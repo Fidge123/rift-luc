@@ -8,6 +8,7 @@ import requests
 import PlayerChampion
 import UpdatePoints
 import Player
+import UpdateHallOfFame
 
 with open('key') as file:
     KEY = {'api_key': file.readline().strip()}
@@ -63,6 +64,7 @@ def get_recent_matches(player_id, region):
 
             PlayerChampion.update(match_id, player_id, region, match)
             Player.updateAttributes(match_id, player_id, region, match)
+            UpdateHallOfFame.update()
             UpdatePoints.calculate_points(player_id, match_id, region, match)
 
     cursor.close()
