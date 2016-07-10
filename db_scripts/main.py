@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """Take argument"""
 
-import sys
+from sys import argv
 import GetRecentMatches
 import RegisterPlayer
 
-if len(sys.argv) == 1:
+if len(argv) == 1:
     print("Please give an argument")
-elif sys.argv[1] == "update":
+elif argv[1] == "update":
     GetRecentMatches.get_all_recent_matches()
-elif sys.argv[1] == "register":
-    if len(sys.argv) != 7:
+elif argv[1] == "register":
+    if len(argv) != 7:
         print("Wrong number of argument: \n" +
               "Schema: main.py register 'name' 'region' 'email' 'password' 'leaguid'")
     else:
