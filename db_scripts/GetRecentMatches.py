@@ -53,6 +53,11 @@ def get_recent_matches(player_id, region):
 
     for match in matches:
         match_id = match["gameId"]
+        settings = {
+            "match_id": match_id,
+            "player_id": player_id,
+            "region": region
+        }
         query = "SELECT id, playerid, region FROM game WHERE id ='" + str(match_id) + "' AND playerid = '" + str(player_id) + "' AND region = '" + region + "';"
         cursor.execute(query)
 
@@ -62,10 +67,10 @@ def get_recent_matches(player_id, region):
             cursor.execute(query, data)
             conn.commit()
 
-            PlayerChampion.update(match_id, player_id, region, match)
-            Player.updateAttributes(match_id, player_id, region, match)
+            PlayerChampion.update(settings, match)
+            Player.updateAttributes(settings, match)
             UpdateHallOfFame.update()
-            UpdatePoints.calculate_points(player_id, match_id, region, match)
+            UpdatePoints.calculate_points(settings, match)
 
     cursor.close()
     conn.close()
