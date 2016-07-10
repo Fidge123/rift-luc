@@ -24,6 +24,7 @@ def usage():
           "-l 'leagueid'")
 
 def delete():
+    """Delete tables"""
     conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
     conn = psycopg2.connect(conn_string)
     cur = conn.cursor()
@@ -36,21 +37,20 @@ def delete():
     conn.close()
 
 def create():
+    """Create tables"""
     conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
     conn = psycopg2.connect(conn_string)
     with conn.cursor() as cursor:
-        cursor.execute(open("DatabaseCreation.sql", "r").read())
+        cursor.execute(open("db_scripts/DatabaseCreation.sql", "r").read())
     conn.commit()
     conn.close()
 
 def fill(opts):
+    """Fill data with static data"""
     region = 'euw'
     for opt, arg in opts[0]:
         if opt in ("-r", "--region"):
-            region = arg
-    if not region:
-        usage()
-        return
+            region = arg.lower()
     FillAchievementTable.fill_achievement_table()
     FillChampionTable.fill_champion_table(region)
     FillHallOfFameTable.fill_hall_of_fame_table()
@@ -99,7 +99,7 @@ def main():
                 delete()
                 create()
                 fill(opts)
-                
+
 
     except getopt.GetoptError as err:
         print(err)
