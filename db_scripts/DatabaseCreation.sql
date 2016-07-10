@@ -1,9 +1,11 @@
+CREATE EXTENSION chkpass;
+
 ﻿CREATE TABLE player (
     id integer NOT NULL,
     leaguename text NOT NULL,
 	region text NOT NULL,
 	email text,
-	password text NOT NULL,
+	password chkpass NOT NULL,
     iconid integer,
 	verified boolean DEFAULT FALSE,
     leagueid integer NOT NULL,
