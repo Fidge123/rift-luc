@@ -1,6 +1,6 @@
 CREATE EXTENSION chkpass;
 
-﻿CREATE TABLE player (
+CREATE TABLE player (
     id integer NOT NULL,
     leaguename text NOT NULL,
 	region text NOT NULL,
@@ -132,10 +132,7 @@ ALTER TABLE ONLY game
 	ADD CONSTRAINT game_pkey PRIMARY KEY (id, playerid, region);
 
 ALTER TABLE ONLY game
-    ADD CONSTRAINT game_playerid_fkey FOREIGN KEY (playerid) REFERENCES player(id);
-
-ALTER TABLE ONLY game
-    ADD CONSTRAINT game_region_fkey FOREIGN KEY (region) REFERENCES player(region);
+    ADD CONSTRAINT game_playerid_region_fkey FOREIGN KEY (playerid,region) REFERENCES player(id,region);
 
 ALTER TABLE ONLY player_achievement_match
     ADD CONSTRAINT player_achievement_match_pkey PRIMARY KEY (playerid,region,achievementid,gameid);
@@ -153,43 +150,25 @@ ALTER TABLE ONLY player_champion
     ADD CONSTRAINT player_champion_pkey PRIMARY KEY (playerid,region,championid);
 
 ALTER TABLE ONLY player_achievement_match
-    ADD CONSTRAINT player_achievement_match_playerid_fkey FOREIGN KEY (playerid) REFERENCES player(id);
-
-ALTER TABLE ONLY player_achievement_match
-    ADD CONSTRAINT player_achievement_match_region_fkey FOREIGN KEY (region) REFERENCES player(region);
+    ADD CONSTRAINT player_achievement_match_gameid_playerid_region_fkey FOREIGN KEY (gameid,playerid,region) REFERENCES game(id,playerid,region);
 
 ALTER TABLE ONLY player_achievement_match
     ADD CONSTRAINT player_achievement_match_achievementid_fkey FOREIGN KEY (achievementid) REFERENCES achievement(id);
 
-ALTER TABLE ONLY player_achievement_match
-    ADD CONSTRAINT player_achievement_match_gameid_fkey FOREIGN KEY (gameid) REFERENCES game(id);
-
 ALTER TABLE ONLY player_repeatable
-    ADD CONSTRAINT player_repeatable_playerid_fkey FOREIGN KEY (playerid) REFERENCES player(id);
-
-ALTER TABLE ONLY player_repeatable
-    ADD CONSTRAINT player_repeatable_region_fkey FOREIGN KEY (region) REFERENCES player(region);
+    ADD CONSTRAINT player_repeatable_playerid_region_fkey FOREIGN KEY (playerid,region) REFERENCES player(id,region);
 
 ALTER TABLE ONLY player_repeatable
     ADD CONSTRAINT player_repeatable_repeatableid_fkey FOREIGN KEY (repeatableid) REFERENCES repeatable(id);
 
 ALTER TABLE ONLY game_repeatable_player
-    ADD CONSTRAINT game_repeatable_player_playerid_fkey FOREIGN KEY (playerid) REFERENCES player(id);
-
-ALTER TABLE ONLY game_repeatable_player
-    ADD CONSTRAINT game_repeatable_player_region_fkey FOREIGN KEY (region) REFERENCES player(region);
+    ADD CONSTRAINT game_repeatable_player_gameid_playerid_region_fkey FOREIGN KEY (gameid,playerid,region) REFERENCES game(id,playerid,region);
 
 ALTER TABLE ONLY game_repeatable_player
     ADD CONSTRAINT game_repeatable_player_repeatableid_fkey FOREIGN KEY (repeatableid) REFERENCES repeatable(id);
 
-ALTER TABLE ONLY game_repeatable_player
-    ADD CONSTRAINT game_repeatable_player_gameid_fkey FOREIGN KEY (gameid) REFERENCES game(id);
-
 ALTER TABLE ONLY player_champion
-    ADD CONSTRAINT player_champion_playerid_fkey FOREIGN KEY (playerid) REFERENCES player(id);
-
-ALTER TABLE ONLY player_champion
-    ADD CONSTRAINT player_champion_region_fkey FOREIGN KEY (region) REFERENCES player(region);
+    ADD CONSTRAINT player_champion_playerid_region_fkey FOREIGN KEY (playerid,region) REFERENCES player(id,region);
 
 ALTER TABLE ONLY player_champion
     ADD CONSTRAINT player_champion_championid_fkey FOREIGN KEY (championid) REFERENCES champion(id);
