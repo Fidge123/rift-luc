@@ -13,7 +13,7 @@ with open('db_config') as file:
 with open('data/hall_of_fame.json') as file:
     HOF = json.load(file)
 
-def fill_repeatable_table():
+def fill_hall_of_fame_table():
     """Main function"""
 
     conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
