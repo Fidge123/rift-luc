@@ -3,6 +3,7 @@
 import json
 import time
 import psycopg2
+import psycopg2.extras
 import requests
 
 with open('key') as file:
@@ -26,14 +27,17 @@ GRP_INSERT = "INSERT INTO game_repeatable_player(playerid, region, repeatableid,
 
 def update_repeatable_tables(settings, repeatable_id, points, cursor):
     """Update database with repeatable points"""
-    cursor.execute(P_UPDATE, (points, settings["player_id"]))
-    cursor.execute(GRP_INSERT, (settings["player_id"], settings["region"], repeatable_id, settings["match_id"]))
+    pid = settings["player_id"]
+    reg = settings["region"]
 
-    cursor.execute(PR_SELECT, (settings["player_id"], settings["region"], repeatable_id))
+    cursor.execute(P_UPDATE, (points, pid))
+    cursor.execute(GRP_INSERT, (pid, reg, repeatable_id, settings["match_id"]))
+
+    cursor.execute(PR_SELECT, (pid, reg, repeatable_id))
     if cursor.rowcount == 0:
-        cursor.execute(PR_INSERT, (1, settings["player_id"], settings["region"], repeatable_id))
+        cursor.execute(PR_INSERT, (1, pid, reg, repeatable_id))
     else:
-        cursor.execute(PR_UPDATE, (1, settings["player_id"], settings["region"], repeatable_id))
+        cursor.execute(PR_UPDATE, (1, pid, reg, repeatable_id))
 
 def dealt_highest_damage(damage, participants):
     """Check if player dealt most damage"""
@@ -45,6 +49,7 @@ def dealt_highest_damage(damage, participants):
     return highest == damage
 
 def kda_greater_than(limit, stats):
+    """Check if KDA is greater than given limit"""
     if "numDeaths" in stats:
         if stats["numDeaths"] == 0:
             stats["numDeaths"] = 1
@@ -81,6 +86,7 @@ def calculate_repeatable(settings, match, game, cursor):
     cursor.execute(R_SELECT)
     repeatables = cursor.fetchall()
     stats = match["stats"]
+    players = game.get("participants", [])
 
     for repeatable in repeatables:
         i = repeatable[0]
@@ -93,18 +99,18 @@ def calculate_repeatable(settings, match, game, cursor):
                 i == 7 and stats.get("minionsKilled", 0) >= 300 or
                 i == 8 and stats.get("minionsKilled", 0) >= 400 or
                 i == 9 and stats.get("minionsKilled", 0) >= 500 or
-                i == 10 and dealt_highest_damage(stats.get("totalDamageDealtToChampions", 0), game.get("participants", [])) or
+                i == 10 and dealt_highest_damage(stats.get("totalDamageDealtToChampions", 0), players) or
                 i == 11 and kda_greater_than(10, stats) or
                 i == 12 and kda_greater_than(20, stats) or
                 i == 13 and stats["win"] and stats.get("numDeaths", 1) == 0 or
-                i == 14 and stole_ten_monster(match["championId"], match["teamId"], game.get("participants", [])) or
+                i == 14 and stole_ten_monster(match["championId"], match["teamId"], players) or
                 i == 15 and killed_baron(match["teamId"], game["teams"]) or
                 i == 16 and killed_vilemaw(match["teamId"], game["teams"])):
             update_repeatable_tables(settings, i, repeatable[1], cursor)
 
 ### Achievements ###
 A_SELECT = "SELECT id, points FROM achievement;"
-P_SELECT = "SELECT wins,minion,assists,wardplaced,wardkills,winstreak,losestreak,gold,largestkillingspree,stealthamount,voidamount,yordleamount,teemowin,teemoamount FROM player WHERE id = %s;"
+P_SELECT = "SELECT * FROM player WHERE id = %s;"
 PAM_SELECT = "SELECT gameid FROM player_achievement_match WHERE playerid = %s AND region = %s AND achievementid = %s;"
 PAM_INSERT = "INSERT INTO player_achievement_match(playerid, region, achievementid, gameid) VALUES (%s,%s,%s,%s);"
 CHAMP_COUNT = "SELECT COUNT(championid) FROM player_champion WHERE playerid=%s;"
@@ -135,9 +141,12 @@ def free_to_play(player_id, cursor):
 
 def update_achievement_tables(settings, achievement_id, cursor):
     """Insert achievement into table if it doesnt exist yet"""
-    cursor.execute(PAM_SELECT, (settings["player_id"], settings["region"], achievement_id))
+    pid = settings["player_id"]
+    reg = settings["region"]
+
+    cursor.execute(PAM_SELECT, (pid, reg, achievement_id))
     if cursor.rowcount == 0:
-        cursor.execute(PAM_INSERT, (settings["player_id"], settings["region"], achievement_id, settings["match_id"]))
+        cursor.execute(PAM_INSERT, (pid, reg, achievement_id, settings["match_id"]))
 
 def calculate_achievements(settings, match, game, cursor):
     """Calculate achievements"""
@@ -152,32 +161,32 @@ def calculate_achievements(settings, match, game, cursor):
 
     for achievement in achievements:
         i = achievement[0]
-        if (i == 1 and player[11] >= 3 or # yordleamount
+        if (i == 1 and player["yordleamount"] >= 3 or
                 i == 2 and three_yordles(settings["player_id"], cursor) or
-                i == 3 and player[0] > 0 or # wins
-                i == 4 and player[0] >= 10 or
-                i == 5 and player[0] >= 20 or
-                i == 6 and player[0] >= 30 or
+                i == 3 and player["wins"] > 0 or
+                i == 4 and player["wins"] >= 10 or
+                i == 5 and player["wins"] >= 20 or
+                i == 6 and player["wins"] >= 30 or
                 i == 7 and champ_pool > 10 or
                 i == 8 and champ_pool > 20 or
                 i == 9 and champ_pool > 30 or
-                i == 10 and player[1] > 3000 or # cs
-                i == 11 and player[1] > 4000 or
-                i == 12 and player[1] > 5000 or
-                i == 13 and player[2] > 100 or # assists
-                i == 14 and player[2] > 200 or
-                i == 15 and player[2] > 300 or
-                i == 16 and player[3] > 100 or # wardplaced
-                i == 17 and player[3] > 200 or
-                i == 18 and player[3] > 300 or
-                i == 19 and player[3] > 500 or
-                i == 20 and player[4] > 50 or # wardkills
-                i == 21 and player[4] > 100 or
-                i == 22 and player[4] > 200 or
-                i == 23 and player[5] > 6 or # winstreak
-                i == 24 and player[5] > 8 or
-                i == 25 and player[5] > 10 or
-                i == 26 and player[6] > 5 or # losestreak
+                i == 10 and player["minion"] > 3000 or
+                i == 11 and player["minion"] > 4000 or
+                i == 12 and player["minion"] > 5000 or
+                i == 13 and player["assists"] > 100 or
+                i == 14 and player["assists"] > 200 or
+                i == 15 and player["assists"] > 300 or
+                i == 16 and player["wardplaced"] > 100 or
+                i == 17 and player["wardplaced"] > 200 or
+                i == 18 and player["wardplaced"] > 300 or
+                i == 19 and player["wardplaced"] > 500 or
+                i == 20 and player["wardkills"] > 50 or
+                i == 21 and player["wardkills"] > 100 or
+                i == 22 and player["wardkills"] > 200 or
+                i == 23 and player["winstreak"] > 6 or
+                i == 24 and player["winstreak"] > 8 or
+                i == 25 and player["winstreak"] > 10 or
+                i == 26 and player["losestreak"] > 5 or
                 i == 27 and game.get("matchDuration", 1500) < 1230 or
                 i == 28 and False or
                 i == 29 and stats["win"] and match.get("subType", "") == "NORMAL" or
@@ -187,22 +196,22 @@ def calculate_achievements(settings, match, game, cursor):
                 i == 33 and False or
                 i == 34 and match.get("gameMode", "") == "TUTORIAL" or
                 i == 35 and False or
-                i == 36 and player[7] > 1000000 or # gold
-                i == 37 and player[8] > 4 or # largestkillingspree
-                i == 38 and player[8] > 8 or
-                i == 39 and player[8] > 12 or
+                i == 36 and player["gold"] > 1000000 or
+                i == 37 and player["largestkillingspree"] > 4 or
+                i == 38 and player["largestkillingspree"] > 8 or
+                i == 39 and player["largestkillingspree"] > 12 or
                 i == 40 and match.get("spell1", 4) != 4 and match.get("spell2", 4) != 4 or
                 i == 41 and game.get("matchDuration", 1500) < 3600 or
-                i == 42 and player[9] >= 3 or #stealth
+                i == 42 and player["stealthamount"] >= 3 or
                 i == 43 and three_stealth(settings["player_id"], cursor) or
-                i == 44 and player[10] >= 3 or # void
+                i == 44 and player["voidamount"] >= 3 or
                 i == 45 and three_void(settings["player_id"], cursor) or
-                i == 46 and player[12] == 1 or # teemowin
-                i == 47 and player[12] == 2 or
-                i == 48 and player[12] == 3 or
-                i == 49 and player[13] == 2 or # teemoamount
-                i == 50 and player[13] == 3 or
-                i == 51 and player[13] == 4 or
+                i == 46 and player["teemowin"] == 1 or
+                i == 47 and player["teemowin"] == 2 or
+                i == 48 and player["teemowin"] == 3 or
+                i == 49 and player["teemoamount"] == 2 or
+                i == 50 and player["teemoamount"] == 3 or
+                i == 51 and player["teemoamount"] == 4 or
                 i == 52 and False or
                 i == 53 and free_to_play(settings["player_id"], cursor)):
             update_achievement_tables(settings, i, cursor)
@@ -223,7 +232,7 @@ def calculate_points(settings, match):
     game = json.loads(response.text)
     conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
     conn = psycopg2.connect(conn_string)
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     calculate_repeatable(settings, match, game, cursor)
     conn.commit()
