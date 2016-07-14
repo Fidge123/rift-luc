@@ -17,6 +17,7 @@ with open('db_config') as file:
 def register_player(name, region, email, password, leagueid):
     """Main function"""
 
+    region = region.lower()
     api = 'https://' + region + '.api.pvp.net/api/lol/' + region
     player = json.loads(requests.get(api + '/v1.4/summoner/by-name/' + name, params=KEY).text)[name.lower()]
 
@@ -24,7 +25,7 @@ def register_player(name, region, email, password, leagueid):
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
     query = "INSERT INTO player(id, leaguename, region, email, password, iconid, leagueid) VALUES (%s,%s,%s,%s,%s,%s,%s);"
-    data = (player["id"], player["name"], region.lower(), email, password, player["profileIconId"], leagueid)
+    data = (player["id"], player["name"], region, email, password, player["profileIconId"], leagueid)
     cursor.execute(query, data)
     conn.commit()
     cursor.close()

@@ -6,13 +6,19 @@ import getopt
 import psycopg2
 import GetRecentMatches
 import RegisterPlayer
-import FillAchievementTable, FillChampionTable, FillHallOfFameTable, FillRepeatableTable
+import FillAchievementTable
+import FillChampionTable
+import FillHallOfFameTable
+import FillRepeatableTable
 
 with open('db_config') as file:
     HOST = file.readline().strip()
     DBNAME = file.readline().strip()
     USER = file.readline().strip()
     PASS = file.readline().strip()
+
+
+CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
 
 def usage():
     """Show usage help"""
@@ -25,21 +31,21 @@ def usage():
 
 def delete():
     """Delete tables"""
-    conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
-    conn = psycopg2.connect(conn_string)
+    conn = psycopg2.connect(CONN_STRING)
     cur = conn.cursor()
-    query = "DROP SCHEMA public CASCADE;"
-    cur.execute(query)
-    query = "CREATE SCHEMA public;"
-    cur.execute(query)
+    cur.execute("DROP SCHEMA IF EXISTS public CASCADE;")
+    cur.execute("DROP SCHEMA IF EXISTS basic_auth CASCADE;")
+    cur.execute("REVOKE SELECT ON TABLE pg_authid FROM anon")
+    cur.execute("DROP ROLE player")
+    cur.execute("DROP ROLE anon")
+    cur.execute("CREATE SCHEMA public;")
     conn.commit()
     cur.close()
     conn.close()
 
 def create():
     """Create tables"""
-    conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
-    conn = psycopg2.connect(conn_string)
+    conn = psycopg2.connect(CONN_STRING)
     with conn.cursor() as cursor:
         cursor.execute(open("db_scripts/DatabaseCreation.sql", "r").read())
     conn.commit()
