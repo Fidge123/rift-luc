@@ -5,10 +5,9 @@ CREATE TABLE player (
     id integer NOT NULL,
     leaguename text NOT NULL,
 	region text NOT NULL,
-	email text CHECK ( email ~* '^.+@.+\..+$' ),
     iconid integer,
 	verified boolean DEFAULT FALSE,
-    leagueid integer NOT NULL,
+    leagueid integer,
 	wins integer DEFAULT 0,
 	winstreak integer DEFAULT 0,
 	losestreak integer DEFAULT 0,
@@ -180,13 +179,21 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE SCHEMA IF NOT EXISTS basic_auth;
 
 CREATE TABLE basic_auth.users (
-    email text PRIMARY KEY CHECK ( email ~* '^.+@.+\..+$' ),
+    leaguename text NOT NULL,
+    region text NOT NULL,
+    -- email text NOT NULL CHECK ( email ~* '^.+@.+\..+$' ),
     pass text NOT NULL CHECK (length(pass) < 72),
-    role name NOT NULL CHECK (length(role) < 72) -- 'admin', 'player', 'anon'
+    role name NOT NULL CHECK (length(role) < 72)
 );
 
+ALTER TABLE basic_auth.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (leaguename, region);
+
 DROP type IF EXISTS basic_auth.jwt_claims CASCADE;
-CREATE type basic_auth.jwt_claims AS (role text, email text);
+CREATE type basic_auth.jwt_claims AS (role text, id integer, region text);
+
+DROP type IF EXISTS current_id CASCADE;
+CREATE type current_id AS (id integer, region text);
 
 CREATE OR REPLACE FUNCTION basic_auth.check_role_exists() RETURNS TRIGGER
     LANGUAGE plpgsql AS $$
@@ -196,7 +203,7 @@ BEGIN
             'unknown database role: ' || new.role;
         RETURN NULL;
     END IF;
-    RETURN new;
+    return new;
 END;
 $$;
 
@@ -206,43 +213,71 @@ BEGIN
     IF tg_op = 'INSERT' OR new.pass <> old.pass THEN
         new.pass = crypt(new.pass, gen_salt('bf'));
     END IF;
-    RETURN new;
+    return new;
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION basic_auth.user_role(email text, pass text) RETURNS name
+CREATE OR REPLACE FUNCTION basic_auth.user_role(leaguename text, region text, pass text) RETURNS name
     LANGUAGE plpgsql AS $$
 BEGIN
-    RETURN (
-        SELECT role FROM basic_auth.users
-        WHERE users.email = user_role.email
+    return (
+        SELECT role
+        FROM basic_auth.users
+        WHERE users.leaguename = user_role.leaguename
+        AND users.region = user_role.region
         AND users.pass = crypt(user_role.pass, users.pass)
     );
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION signup(leaguename text, region text, email text, pass text, leagueid integer) RETURNS void
+CREATE OR REPLACE FUNCTION basic_auth.match_id(leaguename text, region text) RETURNS integer
+    LANGUAGE plpgsql AS $$
+BEGIN
+    return (
+        SELECT player.id
+        FROM player
+        WHERE player.leaguename = match_id.leaguename
+        AND player.region = match_id.region
+    );
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION signup(leaguename text, region text, pass text) RETURNS void
 AS $$
-    INSERT INTO basic_auth.users (email, pass, role) VALUES
-        (signup.email, signup.pass, 'player');
-    INSERT INTO player (id, leaguename, region, email, leagueid) VALUES
-        (-1, signup.leaguename, signup.region, signup.email, signup.leagueid);
+    INSERT INTO basic_auth.users (leaguename, region, pass, role) VALUES
+        (signup.leaguename, signup.region, signup.pass, 'player');
 $$ LANGUAGE sql;
 
-CREATE OR REPLACE FUNCTION login(email text, pass text) RETURNS basic_auth.jwt_claims
+CREATE OR REPLACE FUNCTION login(leaguename text, region text, pass text) RETURNS basic_auth.jwt_claims
     LANGUAGE plpgsql AS $$
 DECLARE
     _role name;
-    _email text;
+    _id integer;
     result basic_auth.jwt_claims;
 BEGIN
-    SELECT basic_auth.user_role(email, pass) INTO _role;
+    SELECT basic_auth.user_role(leaguename, region, pass) INTO _role;
     IF _role IS NULL THEN
         RAISE invalid_password USING message = 'invalid user or password';
     END IF;
-    _email := email;
-    SELECT _role AS role, login.email AS email INTO result;
-    RETURN result;
+
+    SELECT basic_auth.match_id(leaguename, region) INTO _id;
+    IF _id IS NULL THEN
+        RAISE invalid_password USING message = 'either not verified or data not built yet';
+    END IF;
+    SELECT _role AS role, _id AS id, login.region AS region INTO result;
+    return result;
+END;
+$$;
+
+ALTER DATABASE luc SET postgrest.claims.id TO '';
+ALTER DATABASE luc SET postgrest.claims.region TO '';
+CREATE OR REPLACE FUNCTION basic_auth.current_id() RETURNS current_id
+    LANGUAGE plpgsql AS $$
+BEGIN
+    return (
+        current_setting('postgrest.claims.id'),
+        current_setting('postgrest.claims.region')
+    );
 END;
 $$;
 
@@ -259,25 +294,20 @@ CREATE TRIGGER encrypt_pass
     EXECUTE PROCEDURE basic_auth.encrypt_pass();
 
 CREATE OR REPLACE VIEW users AS
-SELECT actual.email AS email,
-   '***'::text AS pass,
-   actual.role AS role
-FROM basic_auth.users AS actual,
-    (SELECT rolname
-    FROM pg_authid
-    WHERE pg_has_role(current_user, oid, 'member')) AS member_of
-WHERE actual.role = member_of.rolname;
+SELECT '***'::text AS pass, role, leaguename, region
+FROM basic_auth.users;
 
 CREATE ROLE player;
 CREATE ROLE anon;
 
-GRANT USAGE ON SCHEMA public, basic_auth TO anon;
-GRANT INSERT ON TABLE basic_auth.users, player TO anon;
-GRANT SELECT ON TABLE pg_authid, basic_auth.users TO anon;
+GRANT USAGE ON SCHEMA basic_auth, public TO anon;
+GRANT SELECT ON users TO anon;
+GRANT INSERT ON TABLE basic_auth.users TO anon;
+GRANT SELECT ON TABLE basic_auth.users, player TO anon;
 GRANT EXECUTE ON FUNCTION
-    login(text,text),
-    signup(text,text,text,text,integer)
+    login(text,text,text),
+    signup(text,text,text)
     TO anon;
 
-GRANT USAGE ON SCHEMA public, basic_auth TO player;
+GRANT USAGE ON SCHEMA public TO player;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO player;
