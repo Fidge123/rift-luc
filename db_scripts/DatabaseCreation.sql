@@ -191,8 +191,8 @@ ALTER TABLE basic_auth.users
 DROP type IF EXISTS basic_auth.jwt_claims CASCADE;
 CREATE type basic_auth.jwt_claims AS (role text, id integer, region text);
 
-DROP type IF EXISTS current_id CASCADE;
-CREATE type current_id AS (id integer, region text);
+DROP type IF EXISTS current_id_type CASCADE;
+CREATE type current_id_type AS (id text, region text);
 
 CREATE OR REPLACE FUNCTION basic_auth.check_role_exists() RETURNS TRIGGER
     LANGUAGE plpgsql AS $$
@@ -270,7 +270,7 @@ $$;
 
 ALTER DATABASE luc SET postgrest.claims.id TO '';
 ALTER DATABASE luc SET postgrest.claims.region TO '';
-CREATE OR REPLACE FUNCTION basic_auth.current_id() RETURNS current_id
+CREATE OR REPLACE FUNCTION current_id() RETURNS current_id_type
     LANGUAGE plpgsql AS $$
 BEGIN
     return (
@@ -310,3 +310,4 @@ GRANT EXECUTE ON FUNCTION
 
 GRANT USAGE ON SCHEMA public TO player;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO player;
+GRANT EXECUTE ON FUNCTION current_id() TO player;
