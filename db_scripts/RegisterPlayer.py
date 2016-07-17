@@ -11,7 +11,7 @@ with open('db_config') as file:
 
 def register_player(name, region, password):
     """Main function"""
-
+    name = name.lower()
     region = region.lower()
     conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
     conn = psycopg2.connect(conn_string)

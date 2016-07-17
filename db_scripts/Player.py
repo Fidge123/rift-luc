@@ -24,14 +24,13 @@ def copy_from_users():
     cursor.execute(query)
     users = cursor.fetchall()
     for user in users:
-        region = user["region"].lower()
         query = "SELECT id FROM player WHERE leaguename = %s AND region = %s;"
-        cursor.execute(query, (user["leaguename"], region))
+        cursor.execute(query, (user["leaguename"], user["region"]))
         if cursor.rowcount == 0:
-            api = 'https://' + region + '.api.pvp.net/api/lol/' + region + '/v1.4/summoner/by-name/'
+            api = 'https://' + user["region"] + '.api.pvp.net/api/lol/' + user["region"] + '/v1.4/summoner/by-name/'
             player = json.loads(requests.get(api + user["leaguename"], params=KEY).text)[user["leaguename"].lower()]
             query = "INSERT INTO player (id, leaguename, region, iconid) VALUES (%s,%s,%s,%s);"
-            data = (player["id"], player["name"], region, player["profileIconId"])
+            data = (player["id"], user["leaguename"], user["region"], player["profileIconId"])
             cursor.execute(query, data)
             CONN.commit()
 

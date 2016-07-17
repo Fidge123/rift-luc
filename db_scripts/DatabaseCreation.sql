@@ -244,7 +244,7 @@ $$;
 CREATE OR REPLACE FUNCTION signup(leaguename text, region text, pass text) RETURNS void
 AS $$
     INSERT INTO basic_auth.users (leaguename, region, pass, role) VALUES
-        (signup.leaguename, signup.region, signup.pass, 'player');
+        (lower(signup.leaguename), lower(signup.region), signup.pass, 'player');
 $$ LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION login(leaguename text, region text, pass text) RETURNS basic_auth.jwt_claims
@@ -254,16 +254,16 @@ DECLARE
     _id integer;
     result basic_auth.jwt_claims;
 BEGIN
-    SELECT basic_auth.user_role(leaguename, region, pass) INTO _role;
+    SELECT basic_auth.user_role(lower(leaguename), lower(region), pass) INTO _role;
     IF _role IS NULL THEN
         RAISE invalid_password USING message = 'invalid user or password';
     END IF;
 
-    SELECT basic_auth.match_id(leaguename, region) INTO _id;
+    SELECT basic_auth.match_id(lower(leaguename), lower(region)) INTO _id;
     IF _id IS NULL THEN
         RAISE invalid_password USING message = 'either not verified or data not built yet';
     END IF;
-    SELECT _role AS role, _id AS id, login.region AS region INTO result;
+    SELECT _role AS role, _id AS id, lower(login.region) AS region INTO result;
     return result;
 END;
 $$;
