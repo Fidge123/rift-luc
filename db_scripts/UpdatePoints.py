@@ -6,10 +6,10 @@ import psycopg2
 import psycopg2.extras
 import requests
 
-with open('key') as file:
-    KEY = {'api_key': file.readline().strip()}
+with open("key") as file:
+    KEY = {"api_key": file.readline().strip()}
 
-with open('db_config') as file:
+with open("db_config") as file:
     HOST = file.readline().strip()
     DBNAME = file.readline().strip()
     USER = file.readline().strip()
@@ -219,15 +219,15 @@ def calculate_achievements(settings, match, game, cursor):
 def calculate_points(settings, match):
     """Main function"""
 
-    api = 'https://' + settings["region"] + '.api.pvp.net/api/lol/' + settings["region"]
-    response = requests.get(api + '/v2.2/match/' + str(settings["match_id"]), params=KEY)
+    api = "https://" + settings["region"] + ".api.pvp.net/api/lol/" + settings["region"]
+    response = requests.get(api + "/v2.2/match/" + str(settings["match_id"]), params=KEY)
 
     while response.status_code != 200:
         if response.status_code == 404:
             return
         print(str(response.status_code) + ": Request failed, waiting 10 seconds")
         time.sleep(10)
-        response = requests.get(api + '/v2.2/match/' + str(settings["match_id"]), params=KEY)
+        response = requests.get(api + "/v2.2/match/" + str(settings["match_id"]), params=KEY)
 
     game = json.loads(response.text)
     conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS

@@ -5,10 +5,10 @@ import json
 import psycopg2
 import requests
 
-with open('key') as file:
-    KEY = {'api_key': file.readline().strip()}
+with open("key") as file:
+    KEY = {"api_key": file.readline().strip()}
 
-with open('db_config') as file:
+with open("db_config") as file:
     HOST = file.readline().strip()
     DBNAME = file.readline().strip()
     USER = file.readline().strip()
@@ -27,8 +27,8 @@ def copy_from_users():
         query = "SELECT id FROM player WHERE leaguename = %s AND region = %s;"
         cursor.execute(query, (user["leaguename"], user["region"]))
         if cursor.rowcount == 0:
-            api = 'https://' + user["region"] + '.api.pvp.net/api/lol/' + user["region"] + '/v1.4/summoner/by-name/'
-            player = json.loads(requests.get(api + user["leaguename"], params=KEY).text)[user["leaguename"].lower()]
+            url = "https://" + user["region"] + ".api.pvp.net/api/lol/" + user["region"] + "/v1.4/summoner/by-name/" + user["leaguename"]
+            player = json.loads(requests.get(url, params=KEY).text)[user["leaguename"].lower()]
             query = "INSERT INTO player (id, leaguename, region, iconid) VALUES (%s,%s,%s,%s);"
             data = (player["id"], user["leaguename"], user["region"], player["profileIconId"])
             cursor.execute(query, data)
@@ -68,49 +68,37 @@ def update_attributes(settings, match):
         CONN.commit()
 
     if "minionsKilled" in match["stats"]:
-        minion = attributes["minion"] + match["stats"]["minionsKilled"]
-        update("minion", minion, settings, cursor)
+        update("minion", attributes["minion"] + match["stats"]["minionsKilled"], settings, cursor)
 
     if "wardKilled" in match["stats"]:
-        wardkills = attributes["wardkills"] + match["stats"]["wardKilled"]
-        update("wardkills", wardkills, settings, cursor)
+        update("wardkills", attributes["wardkills"] + match["stats"]["wardKilled"], settings, cursor)
 
     if "wardPlaced" in match["stats"]:
-        wardplaced = attributes["wardplaced"] + match["stats"]["wardPlaced"]
-        update("wardplaced", wardplaced, settings, cursor)
+        update("wardplaced", attributes["wardplaced"] + match["stats"]["wardPlaced"], settings, cursor)
 
     if "championsKilled" in match["stats"]:
-        kills = attributes["kills"] + match["stats"]["championsKilled"]
-        update("kills", kills, settings, cursor)
+        update("kills", attributes["kills"] + match["stats"]["championsKilled"], settings, cursor)
 
     if "numDeaths" in match["stats"]:
-        deaths = attributes["deaths"] + match["stats"]["numDeaths"]
-        update("deaths", deaths, settings, cursor)
+        update("deaths", attributes["deaths"] + match["stats"]["numDeaths"], settings, cursor)
 
     if "assists" in match["stats"]:
-        assists = attributes["assists"] + match["stats"]["assists"]
-        update("assists", assists, settings, cursor)
+        update("assists", attributes["assists"] + match["stats"]["assists"], settings, cursor)
 
     if "goldSpent" in match["stats"]:
-        gold = attributes["gold"] + match["stats"]["goldSpent"]
-        update("gold", gold, settings, cursor)
+        update("gold", attributes["gold"] + match["stats"]["goldSpent"], settings, cursor)
 
     if "largestKillingSpree" in match["stats"] and attributes["largestkillingspree"] < match["stats"]["largestKillingSpree"]:
-        spree = match["stats"]["largestKillingSpree"]
-        update("largestkillingspree", spree, settings, cursor)
+        update("largestkillingspree", match["stats"]["largestKillingSpree"], settings, cursor)
 
     if "largestCriticalStrike" in match["stats"] and attributes["highestcrit"] < match["stats"]["largestCriticalStrike"]:
-        crit = match["stats"]["largestCriticalStrike"]
-        update("highestcrit", crit, settings, cursor)
+        update("highestcrit", match["stats"]["largestCriticalStrike"], settings, cursor)
 
     if "totalTimeCrowdControlDealt" in match["stats"]:
-        duration = attributes["ccduration"] + match["stats"]["totalTimeCrowdControlDealt"]
-        update("ccduration", duration, settings, cursor)
+        update("ccduration", attributes["ccduration"] + match["stats"]["totalTimeCrowdControlDealt"], settings, cursor)
 
     if match["championId"] == 17:
-        amount = attributes["teemoamount"] + 1
-        update("teemoamount", amount, settings, cursor)
+        update("teemoamount", attributes["teemoamount"] + 1, settings, cursor)
 
         if match["stats"]["win"]:
-            win = attributes["teemowin"] + 1
-            update("teemowin", win, settings, cursor)
+            update("teemowin", attributes["teemowin"] + 1, settings, cursor)

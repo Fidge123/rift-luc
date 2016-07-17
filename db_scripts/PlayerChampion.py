@@ -3,15 +3,17 @@
 
 import psycopg2
 
-with open('db_config') as file:
+with open("db_config") as file:
     HOST = file.readline().strip()
     DBNAME = file.readline().strip()
     USER = file.readline().strip()
     PASS = file.readline().strip()
 
+CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
+
 def update(settings, match):
-    conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
-    conn = psycopg2.connect(conn_string)
+    """Update player champion table"""
+    conn = psycopg2.connect(CONN_STRING)
     cursor = conn.cursor()
 
     query = "SELECT amount FROM player_champion WHERE playerid = %s AND region = %s AND championid = %s;"

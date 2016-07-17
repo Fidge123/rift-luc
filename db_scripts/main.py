@@ -12,12 +12,11 @@ import FillChampionTable
 import FillHallOfFameTable
 import FillRepeatableTable
 
-with open('db_config') as file:
+with open("db_config") as file:
     HOST = file.readline().strip()
     DBNAME = file.readline().strip()
     USER = file.readline().strip()
     PASS = file.readline().strip()
-
 
 CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
 
@@ -63,7 +62,7 @@ def fill(opts):
 
 def register(opts):
     """Register a new player"""
-    name = region = password = ''
+    name = region = password = ""
 
     for opt, arg in opts[0]:
         if opt in ("-n", "--name"):
@@ -108,5 +107,5 @@ def main():
         print(err)
         usage()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
