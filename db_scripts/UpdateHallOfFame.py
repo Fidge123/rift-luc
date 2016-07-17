@@ -37,25 +37,12 @@ def update():
         elif i == 8:
             query = "SELECT id, region FROM player ORDER BY ccduration DESC LIMIT 3;"
         cursor.execute(query)
-        result1 = cursor.fetchone()
-        result2 = cursor.fetchone()
-        result3 = cursor.fetchone()
-
-        player_id = result1[0]
-        region = result1[1]
+        result = cursor.fetchall()
         place = 1
-        data = (player_id, region, i, place)
-        cursor.execute(HOF_INSERT, data)
 
-        player_id = result2[0]
-        region = result2[1]
-        place = 2
-        data = (player_id, region, i, place)
-        cursor.execute(HOF_INSERT, data)
-
-        player_id = result3[0]
-        region = result3[1]
-        place = 3
-        data = (player_id, region, i, place)
-        cursor.execute(HOF_INSERT, data)
-        conn.commit()
+        for player in result:
+            player_id = player[0]
+            region = player[1]
+            data = (player_id, region, i, place)
+            cursor.execute(HOF_INSERT, data)
+            place += 1

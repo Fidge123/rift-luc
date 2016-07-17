@@ -5,6 +5,7 @@ from sys import argv
 import getopt
 import psycopg2
 import GetRecentMatches
+import Player
 import RegisterPlayer
 import FillAchievementTable
 import FillChampionTable
@@ -22,12 +23,11 @@ CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " passwor
 
 def usage():
     """Show usage help"""
-    print("Schema: main.py --update \n" +
-          "main.py --reset --region='region/-r 'region' \n" +
-          "main.py --register --name='name' --region='region' " +
-          "--emai='email' --password='password' --leagueid='leagueid' \n" +
-          "main.py --register -n 'name' -r 'region -e 'email' -p 'password' " +
-          "-l 'leagueid'")
+    print("Schema: main.py --update\n" +
+          "main.py --reset\n" +
+          "main.py --register --name='name' --region='region' --password='password'\n" +
+          "main.py --register -n 'name' -r 'region -p 'password'\n" +
+          "main.py --verify")
 
 def delete():
     """Delete tables"""
@@ -86,7 +86,8 @@ def main():
 
     try:
         opts = getopt.getopt(argv[1:], "hn:r:p:",
-                             ["help", "update", "register", "name=", "region=", "password=", "reset"])
+                             ["help", "update", "register", "verify",
+                              "name=", "region=", "password=", "reset"])
 
         for opt in opts[0]:
             if opt[0] in ("-h", "--help"):
@@ -95,6 +96,8 @@ def main():
                 GetRecentMatches.get_all_recent_matches()
             elif opt[0] == "--register":
                 register(opts)
+            elif opt[0] == "--verify":
+                Player.copy_from_users()
             elif opt[0] == "--reset":
                 delete()
                 create()

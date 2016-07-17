@@ -6,7 +6,6 @@ CREATE TABLE player (
     leaguename text NOT NULL,
 	region text NOT NULL,
     iconid integer,
-	verified boolean DEFAULT FALSE,
     leagueid integer,
 	wins integer DEFAULT 0,
 	winstreak integer DEFAULT 0,

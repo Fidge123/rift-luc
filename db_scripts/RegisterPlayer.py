@@ -3,9 +3,6 @@
 
 import psycopg2
 
-with open('key') as file:
-    KEY = {'api_key': file.readline().strip()}
-
 with open('db_config') as file:
     HOST = file.readline().strip()
     DBNAME = file.readline().strip()

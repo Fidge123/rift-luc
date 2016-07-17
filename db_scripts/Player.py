@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """Take match and player data, get champ and save it to the database"""
 
+import json
 import psycopg2
+import requests
+
+with open('key') as file:
+    KEY = {'api_key': file.readline().strip()}
 
 with open('db_config') as file:
     HOST = file.readline().strip()
@@ -12,7 +17,26 @@ with open('db_config') as file:
 CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
 CONN = psycopg2.connect(CONN_STRING)
 
+def copy_from_users():
+    """Create new player from (validated) user"""
+    cursor = CONN.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    query = "SELECT leaguename, region FROM basic_auth.users;"
+    cursor.execute(query)
+    users = cursor.fetchall()
+    for user in users:
+        region = user["region"].lower()
+        query = "SELECT id FROM player WHERE leaguename = %s AND region = %s;"
+        cursor.execute(query, (user["leaguename"], region))
+        if cursor.rowcount == 0:
+            api = 'https://' + region + '.api.pvp.net/api/lol/' + region + '/v1.4/summoner/by-name/'
+            player = json.loads(requests.get(api + user["leaguename"], params=KEY).text)[user["leaguename"].lower()]
+            query = "INSERT INTO player (id, leaguename, region, iconid) VALUES (%s,%s,%s,%s);"
+            data = (player["id"], player["name"], region, player["profileIconId"])
+            cursor.execute(query, data)
+            CONN.commit()
+
 def update(attribute, value, settings, cursor):
+    """Write data to table"""
     query = "UPDATE player SET (" + attribute + ") = (%s) WHERE id = %s AND region = %s;"
     data = (value, settings["player_id"], settings["region"])
     cursor.execute(query, data)
