@@ -63,22 +63,18 @@ def fill(opts):
 
 def register(opts):
     """Register a new player"""
-    name = region = email = password = leagueid = ''
+    name = region = password = ''
 
     for opt, arg in opts[0]:
         if opt in ("-n", "--name"):
             name = arg
         elif opt in ("-r", "--region"):
             region = arg
-        elif opt in ("-e", "--email"):
-            email = arg
         elif opt in ("-p", "--password"):
             password = arg
-        elif opt in ("-l", "--leagueid"):
-            leagueid = arg
 
-    if name and region and password and leagueid and email:
-        RegisterPlayer.register_player(name, region, email, password, leagueid)
+    if name and region and password:
+        RegisterPlayer.register_player(name, region, password)
     else:
         usage()
 
@@ -89,9 +85,8 @@ def main():
         print("Please give an argument or use main.py -h/--help for options")
 
     try:
-        opts = getopt.getopt(argv[1:], "hn:r:e:p:l:",
-                             ["help", "update", "register", "name=", "region=",
-                              "email=", "password=", "leagueid=", "reset"])
+        opts = getopt.getopt(argv[1:], "hn:r:p:",
+                             ["help", "update", "register", "name=", "region=", "password=", "reset"])
 
         for opt in opts[0]:
             if opt[0] in ("-h", "--help"):

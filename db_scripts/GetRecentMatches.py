@@ -68,7 +68,7 @@ def get_recent_matches(player_id, region):
             conn.commit()
 
             PlayerChampion.update(settings, match)
-            Player.updateAttributes(settings, match)
+            Player.update_attributes(settings, match)
             UpdateHallOfFame.update()
             UpdatePoints.calculate_points(settings, match)
 
