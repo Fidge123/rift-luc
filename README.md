@@ -1,10 +1,8 @@
-# WORK IN PROGRESS #
-
-Sadly we could not create a finished project within the timeframe of the API Challenge, so far the python scripts can fill the database correctly by using the API but have to be started by hand as of now. The frontend is mainly static and mocked, but we are looking forward to finishing it as it has been a lot of fun so far.
-
 # League Unlock Challenge #
 
 League Unlock Challenge uses data about your League of Legend games provided by the Riot Developer API to give you points for several kinds of achievements. You can form a league with friends for a fun competition to be the best at the League Unlock Challenge!
+
+The project is currently ongoing and not yet fully functional.
 
 ## Dependencies ##
 
@@ -140,14 +138,6 @@ Once the server is started, create a database
 createdb luc
 ```
 
-### Database scripts ###
-
-Once you have a database created, run the DatabaseCreation.sql script to create the table schema
-
-``` bash
-psql -d luc -a -f db_scripts/DatabaseCreation.sql
-```
-
 ### Start PostgREST server ###
 
 Start PostgREST server on default port 3000
@@ -155,6 +145,57 @@ Start PostgREST server on default port 3000
 postgrest postgres://localhost:5432/luc -a postgres -j <secret>
 ```
 For more information read http://postgrest.com/install/server/
+
+You can now use the PostgREST API to register, login and read the available data.
+
+```
+POST localhost:3000/rpc/signup
+Body:
+{
+    "leaguename": "Fidge1234",
+    "region": "EUW",
+    "pass": "ENTER-YOUR-PASSWORD-HERE"
+}
+
+POST localhost:3000/rpc/login
+Body:
+{
+    "leaguename": "Fidge1234",
+    "region": "EUW",
+    "pass": "ENTER-YOUR-PASSWORD-HERE"
+}
+
+Response:
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZvb0BiYXIuY29tIiwicm9sZSI6ImF1dGhvciJ9.KHwYdK9dAMAg-MGCQXuDiFuvbmW-y8FjfYIcMrETnto"
+}
+
+POST localhost:3000/rpc/current_id
+Header:
+    Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZvb0BiYXIuY29tIiwicm9sZSI6ImF1dGhvciJ9.KHwYdK9dAMAg-MGCQXuDiFuvbmW-y8FjfYIcMrETnto
+Response:
+[{
+    "id": "12345678",
+    "region": "euw"
+}]
+
+GET localhost:3000/player?id=eq.12345678
+Header:
+    Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZvb0BiYXIuY29tIiwicm9sZSI6ImF1dGhvciJ9.KHwYdK9dAMAg-MGCQXuDiFuvbmW-y8FjfYIcMrETnto
+Response:
+[
+  {
+    "id": 12345678,
+    "leaguename": "fidge1234",
+    "region": "euw",
+    "iconid": 1,
+    "leagueid": null,
+    "wins": 0,
+    ...
+    "points": 0
+  }
+]
+```
 
 ### Python scripts ###
 
@@ -173,7 +214,16 @@ echo DB_NAME >> DB_CONFIG
 echo USER_NAME >> DB_CONFIG
 echo PASSWORD >> DB_CONFIG
 ```
-<TODO>
+
+Once this information is provided, you can run the main.py to trigger all necessary functionality.
+
+``` bash
+./main.py -h # help
+./main.py --reset # reset or create the database and fill it with static data from the API
+./main.py --register -n 'name' -r 'region' -p 'password' # convenience function to register a user
+./main.py --verify # trigger a verification process which creates an entry in the player table for all registered users
+./main.py --update # load recent games for all players and write calculated points to db
+```
 
 ## Deployment ##
 
