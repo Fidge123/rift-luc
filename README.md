@@ -148,41 +148,70 @@ For more information read http://postgrest.com/install/server/
 
 You can now use the PostgREST API to register, login and read the available data.
 
-```
-POST localhost:3000/rpc/signup
-Body:
-{
-    "leaguename": "Fidge1234",
-    "region": "EUW",
-    "pass": "ENTER-YOUR-PASSWORD-HERE"
-}
+To create a new user, you can use the signup function.
 
-POST localhost:3000/rpc/login
+`POST localhost:3000/rpc/signup`
+
 Body:
+
+``` json
 {
     "leaguename": "Fidge1234",
     "region": "EUW",
     "pass": "ENTER-YOUR-PASSWORD-HERE"
 }
+```
+
+Use the login function to receive a jwt token to authenticate with.
+
+`POST localhost:3000/rpc/login`
+
+Body:
+
+``` json
+{
+    "leaguename": "Fidge1234",
+    "region": "EUW",
+    "pass": "ENTER-YOUR-PASSWORD-HERE"
+}
+```
 
 Response:
+
+``` json
 {
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZvb0BiYXIuY29tIiwicm9sZSI6ImF1dGhvciJ9.KHwYdK9dAMAg-MGCQXuDiFuvbmW-y8FjfYIcMrETnto"
 }
+```
 
-POST localhost:3000/rpc/current_id
+You can get account information with the current_id function, if you provide the jwt token.
+
+`POST localhost:3000/rpc/current_id`
+
 Header:
-    Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZvb0BiYXIuY29tIiwicm9sZSI6ImF1dGhvciJ9.KHwYdK9dAMAg-MGCQXuDiFuvbmW-y8FjfYIcMrETnto
+
+`Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZvb0BiYXIuY29tIiwicm9sZSI6ImF1dGhvciJ9.KHwYdK9dAMAg-MGCQXuDiFuvbmW-y8FjfYIcMrETnto`
+
 Response:
+
+``` json
 [{
     "id": "12345678",
     "region": "euw"
 }]
+```
 
-GET localhost:3000/player?id=eq.12345678
+To make requests against the database, you also have to provide your token.
+
+`GET localhost:3000/player?id=eq.12345678`
+
 Header:
-    Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZvb0BiYXIuY29tIiwicm9sZSI6ImF1dGhvciJ9.KHwYdK9dAMAg-MGCQXuDiFuvbmW-y8FjfYIcMrETnto
+
+`Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZvb0BiYXIuY29tIiwicm9sZSI6ImF1dGhvciJ9.KHwYdK9dAMAg-MGCQXuDiFuvbmW-y8FjfYIcMrETnto`
+
 Response:
+
+``` json
 [
   {
     "id": 12345678,
