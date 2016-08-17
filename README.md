@@ -47,7 +47,7 @@ You can get more information on http://postgrest.com/
 
 To use PostgREST you can download the release for you platform from https://github.com/begriffs/postgrest/releases/tag/v0.3.1.1 and extract it with
 ``` bash
-tar zxf postgrest-[version]-[platform].tar.xz
+tar -xf postgrest-[version]-[platform].tar.xz
 ```
 
 ### Install Python ###
@@ -235,27 +235,27 @@ Response:
 Too use the python scripts, you will need to create key-file with your Riot API Key first.
 
 ``` bash
-echo ENTER-YOUR-KEY-HERE > KEY
+echo ENTER-YOUR-KEY-HERE > key
 ```
 
 To use the python scripts that are updating/filling your database, you will need to create a db_config file with your hostadress of your postgresql server, the name of your db, the user_name for your database and your password for this user.
 All this information should each be stored per line.
 
 ``` bash
-echo HOSTADRESS >> DB_CONFIG
-echo DB_NAME >> DB_CONFIG
-echo USER_NAME >> DB_CONFIG
-echo PASSWORD >> DB_CONFIG
+echo HOSTADRESS >> db_config
+echo DB_NAME >> db_config
+echo USER_NAME >> db_config
+echo PASSWORD >> db_config
 ```
 
 Once this information is provided, you can run the main.py to trigger all necessary functionality.
 
 ``` bash
-./main.py -h # help
-./main.py --reset # reset or create the database and fill it with static data from the API
-./main.py --register -n 'name' -r 'region' -p 'password' # convenience function to register a user
-./main.py --verify # trigger a verification process which creates an entry in the player table for all registered users
-./main.py --update # load recent games for all players and write calculated points to db
+./db_scripts/main.py -h # help
+./db_scripts/main.py --reset # reset or create the database and fill it with static data from the API
+./db_scripts/main.py --register -n 'name' -r 'region' -p 'password' # convenience function to register a user
+./db_scripts/main.py --verify # trigger a verification process which creates an entry in the player table for all registered users
+./db_scripts/main.py --update # load recent games for all players and write calculated points to db
 ```
 
 ## Deployment ##
