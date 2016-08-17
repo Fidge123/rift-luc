@@ -9,7 +9,7 @@ with open("db_config") as file:
     USER = file.readline().strip()
     PASS = file.readline().strip()
 
-HOF_UPDATE = "UPDATE player_halloffame SET (playerid, region) = (%s,%s) WHERE hofid = %s AND place = %S;"
+HOF_UPDATE = "UPDATE player_halloffame SET (playerid, region) = (%s,%s) WHERE hofid = %s AND place = %s;"
 
 def update():
     """Update Hall of Fame data"""
