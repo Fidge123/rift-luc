@@ -1,0 +1,63 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
+<dom-module id="luc-login">
+  <template>
+    <style>
+        :host {
+            display: block;
+        }
+        .login-field {
+            background-color: lightgrey;
+            width: 400px;
+            height: 160px;
+            margin: auto;
+        }
+        .inputs {
+            padding: 40px 20px 10px 20px;
+        }
+        .inputs label {
+            line-height: 1.5em;
+        }
+        .inputs input {
+            width: 70%;
+            float: right;
+            clear: both;
+        }
+        .buttons {
+            float: right;
+            clear: both;
+            padding: 10px 20px;
+        }
+    </style>
+    <iron-ajax id="login" url="localhost:8000/api/rpc/login"></iron-ajax>
+    <iron-ajax id="signup" url="localhost:8000/api/rpc/signup"></iron-ajax>
+    <div class="login-field">
+        <div class="inputs">
+            <label>
+                Summoner: <input type="text" />
+            </label>
+            <label>
+                Password: <input type="password" />
+            </label>
+        </div>
+        <div class="buttons">
+            <button>Register</button>
+            <button>Login</button>
+        </div>
+    </div>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'luc-login',
+
+        properties: {
+        }
+      });
+    })();
+  </script>
+</dom-module>

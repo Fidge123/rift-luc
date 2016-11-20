@@ -1,4 +1,5 @@
 server {
+    server_name nashor.de;
     listen 80;
 
     location /api/ {
