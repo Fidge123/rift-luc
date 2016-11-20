@@ -1,5 +1,5 @@
 FROM python:3.5
-ADD db_scripts /code
+ADD . /code
 WORKDIR /code
-RUN pip install -r requirements.txt
-CMD python main.py
+RUN pip install -r db_scripts/requirements.txt
+CMD python db_scripts/main.py --reset

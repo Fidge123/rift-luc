@@ -9,6 +9,7 @@ services:
             PW: test
         volumes:
         - .:/code
+        entrypoint: ./wait-for-it.sh pg:5432
         links:
         - db:pg
     db:
