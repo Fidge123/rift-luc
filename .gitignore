@@ -9,3 +9,4 @@ db_scripts/db_config
 db_config
 *.pyc
 db_scripts/__pycache__
+npm-debug.log

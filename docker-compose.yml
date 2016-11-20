@@ -1,0 +1,43 @@
+version: '2'
+services:
+    py:
+        build: .
+        volumes:
+        - .:/code
+        depends_on:
+        - db
+    db:
+        image: postgres
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: test
+            POSTGRES_DB: luc
+        ports:
+        - 5432:5432
+        volumes:
+        - ./db_scripts:/docker-entrypoint-initdb.d/
+    api:
+        image: begriffs/postgrest
+        environment:
+            POSTGREST_JWT_SECRET: foobarbaz
+            POSTGREST_SCHEMA: public
+            POSTGREST_ANONYMOUS: anon
+            POSTGREST_POOL: 200
+            POSTGREST_MAX_ROWS: 10000
+            PG_ENV_POSTGRES_USER: postgres
+            PG_ENV_POSTGRES_PASSWORD: test
+            PG_ENV_POSTGRES_DB: luc
+            PG_PORT_5432_TCP_ADDR: pg
+            PG_PORT_5432_TCP_PORT: 5432
+        ports:
+        - 3000:3000
+        links:
+        - db:pg
+    fe:
+        image: nginx
+        ports:
+        - 80:80
+        depends_on:
+        - api
+        volumes:
+        - ./app/dist:/usr/share/nginx/html
