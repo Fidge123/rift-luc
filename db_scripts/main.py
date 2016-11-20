@@ -3,8 +3,10 @@
 
 from sys import argv
 from os import environ
+from threading import Thread
 import getopt
 import psycopg2
+import time
 import GetRecentMatches
 import Player
 import RegisterPlayer
@@ -80,6 +82,16 @@ def register(opts):
     else:
         usage()
 
+def update_loop(s_time):
+    while True:
+        GetRecentMatches.get_all_recent_macthes()
+        time.sleep(3600.0 - ((time.time() - s_time) % 3600.0))
+
+def verify_loop(s_time):
+    while True:
+        Player.copy_from_users()
+        time.sleep(60.0 - ((time.time() - s_time) % 60.0))
+
 def main():
     """Run requested command"""
 
@@ -89,7 +101,8 @@ def main():
     try:
         opts = getopt.getopt(argv[1:], "hn:r:p:",
                              ["help", "update", "register", "verify",
-                              "name=", "region=", "password=", "reset"])
+                              "name=", "region=", "password=", "reset",
+                              "start"])
 
         for opt in opts[0]:
             if opt[0] in ("-h", "--help"):
@@ -104,6 +117,16 @@ def main():
                 delete()
                 create()
                 fill(opts)
+            elif opt[0] == "--start":
+                s_time = time.time()
+                t1 = Thread(target = update_loop(s_time))
+                t2 = Thread(target = verify_loop(s_time))
+                t1.setDaemon(True)
+                t2.setDaemon(True)
+                t1.start()
+                t2.start()
+                while True:
+                    time.sleep(60.0)
 
 
     except getopt.GetoptError as err:
