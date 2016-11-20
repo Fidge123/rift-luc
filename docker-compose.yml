@@ -9,7 +9,7 @@ services:
             PW: test
         volumes:
         - .:/code
-        entrypoint: ./wait-for-it.sh pg:5432
+        entrypoint: ["bash", "/code/wait-for-it.sh", "pg:5432"]
         links:
         - db:pg
     db:
@@ -50,4 +50,6 @@ services:
         volumes:
         - ./nginx.template:/etc/nginx/conf.d/nginx.template
         - ./dist:/usr/share/nginx/html
-        command: /bin/bash -c "envsubst < /etc/nginx/conf.d/nginx.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+        - .:/code
+        entrypoint: ["bash", "/code/conf_sub.sh"]
+
