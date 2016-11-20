@@ -11,7 +11,7 @@ import GetRecentMatches
 import Player
 import RegisterPlayer
 import FillAchievementTable
-import FillChampionTable
+import UpdateChampionTable
 import FillHallOfFameTable
 import FillRepeatableTable
 
@@ -61,7 +61,7 @@ def fill(opts):
         if opt in ("-r", "--region"):
             region = arg.lower()
     FillAchievementTable.fill_achievement_table()
-    FillChampionTable.fill_champion_table(region)
+    UpdateChampionTable.update_champion_table(region)
     FillHallOfFameTable.fill_hall_of_fame_table()
     FillRepeatableTable.fill_repeatable_table()
 
@@ -82,15 +82,19 @@ def register(opts):
     else:
         usage()
 
-def update_loop(s_time):
+def update_loop():
+    s_time = time.time()
     while True:
+        print("UPDATING")
         GetRecentMatches.get_all_recent_matches()
-        time.sleep(3600.0 - ((time.time() - s_time) % 3600.0))
+        time.sleep(3600 - ((time.time() - s_time) % 3600))
 
-def verify_loop(s_time):
+def verify_loop():
+    s_time = time.time()
     while True:
+        print("VERIFYING")
         Player.copy_from_users()
-        time.sleep(60.0 - ((time.time() - s_time) % 60.0))
+        time.sleep(60 - ((time.time() - s_time) % 60))
 
 def main():
     """Run requested command"""
@@ -119,16 +123,10 @@ def main():
                 fill(opts)
             elif opt[0] == "--start":
                 fill(opts)
-                s_time = time.time()
-                t1 = Thread(target = update_loop(s_time))
-                t2 = Thread(target = verify_loop(s_time))
-                t1.setDaemon(True)
-                t2.setDaemon(True)
+                t1 = Thread(target=update_loop, daemon=False)
+                t2 = Thread(target=verify_loop, daemon=False)
                 t1.start()
                 t2.start()
-                while True:
-                    time.sleep(60.0)
-
 
     except getopt.GetoptError as err:
         print(err)
