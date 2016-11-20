@@ -84,7 +84,7 @@ def register(opts):
 
 def update_loop(s_time):
     while True:
-        GetRecentMatches.get_all_recent_macthes()
+        GetRecentMatches.get_all_recent_matches()
         time.sleep(3600.0 - ((time.time() - s_time) % 3600.0))
 
 def verify_loop(s_time):
@@ -116,6 +116,7 @@ def main():
             elif opt[0] == "--reset":
                 delete()
                 create()
+                fill(opts)
             elif opt[0] == "--start":
                 fill(opts)
                 s_time = time.time()

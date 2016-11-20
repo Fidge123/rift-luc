@@ -9,7 +9,7 @@ services:
             PW: test
         volumes:
         - .:/code
-        entrypoint: ["bash", "/code/wait-for-it.sh", "pg:5432"]
+        entrypoint: ["bash", "/code/wait-for-it.sh", "pg:5432", "--",  "python", "db_scripts/main.py", "--start"]
         links:
         - db:pg
     db:

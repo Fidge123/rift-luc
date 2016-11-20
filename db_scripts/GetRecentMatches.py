@@ -51,8 +51,7 @@ def get_recent_matches(player_id, region):
 
     matches = json.loads(response.text)["games"]
 
-    conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
-    conn = psycopg2.connect(conn_string)
+    conn = psycopg2.connect(CONN_STRING)
     cursor = conn.cursor()
 
     for match in matches:
