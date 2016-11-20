@@ -46,4 +46,4 @@ services:
         depends_on:
         - api
         volumes:
-        - ./app/dist:/usr/share/nginx/html
+        - ./dist:/usr/share/nginx/html
