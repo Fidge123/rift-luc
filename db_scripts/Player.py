@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Take match and player data, get champ and save it to the database"""
 
+from os import environ
 import json
 import psycopg2
 import requests
@@ -8,13 +9,15 @@ import requests
 with open("key") as file:
     KEY = {"api_key": file.readline().strip()}
 
-with open("db_config") as file:
-    HOST = file.readline().strip()
-    DBNAME = file.readline().strip()
-    USER = file.readline().strip()
-    PASS = file.readline().strip()
+# with open("db_config") as file:
+#     HOST = file.readline().strip()
+#     DBNAME = file.readline().strip()
+#     USER = file.readline().strip()
+#     PASS = file.readline().strip()
+#
+# CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
 
-CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
+CONN_STRING = "host=" + environ['HOST'] + " dbname=" + environ['DBNAME'] + " user=" + environ['USER'] + " password=" + environ['PW']
 CONN = psycopg2.connect(CONN_STRING)
 
 def copy_from_users():

@@ -2,6 +2,7 @@
 """Take argument"""
 
 from sys import argv
+from os import environ
 import getopt
 import psycopg2
 import GetRecentMatches
@@ -12,13 +13,15 @@ import FillChampionTable
 import FillHallOfFameTable
 import FillRepeatableTable
 
-with open("db_config") as file:
-    HOST = file.readline().strip()
-    DBNAME = file.readline().strip()
-    USER = file.readline().strip()
-    PASS = file.readline().strip()
+# with open("db_config") as file:
+#     HOST = file.readline().strip()
+#     DBNAME = file.readline().strip()
+#     USER = file.readline().strip()
+#     PASS = file.readline().strip()
+#
+# CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
 
-CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
+CONN_STRING = "host=" + environ['HOST'] + " dbname=" + environ['DBNAME'] + " user=" + environ['USER'] + " password=" + environ['PW']
 
 def usage():
     """Show usage help"""

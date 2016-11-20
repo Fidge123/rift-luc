@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Request new game data and updates the champion table"""
 
+from os import environ
 import json
 import requests
 import psycopg2
@@ -8,13 +9,15 @@ import psycopg2
 with open("key") as file:
     KEY = {"api_key": file.readline().strip()}
 
-with open("db_config") as file:
-    HOST = file.readline().strip()
-    DBNAME = file.readline().strip()
-    USER = file.readline().strip()
-    PASS = file.readline().strip()
+# with open("db_config") as file:
+#     HOST = file.readline().strip()
+#     DBNAME = file.readline().strip()
+#     USER = file.readline().strip()
+#     PASS = file.readline().strip()
+#
+# CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
 
-CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
+CONN_STRING = "host=" + environ['HOST'] + " dbname=" + environ['DBNAME'] + " user=" + environ['USER'] + " password=" + environ['PW']
 
 # Also in FillChampionTable.py
 YORDLES = ["Amumu", "Corki", "Gnar", "Heimer", "Lulu", "Kennen", "Poppy", "Rumble", "Teemo",

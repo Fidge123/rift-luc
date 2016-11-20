@@ -1,20 +1,24 @@
 #!/usr/bin/env python3
 """Take match and player data, get champ and save it to the database"""
 
+from os import environ
 import psycopg2
 
-with open("db_config") as file:
-    HOST = file.readline().strip()
-    DBNAME = file.readline().strip()
-    USER = file.readline().strip()
-    PASS = file.readline().strip()
+# with open("db_config") as file:
+#     HOST = file.readline().strip()
+#     DBNAME = file.readline().strip()
+#     USER = file.readline().strip()
+#     PASS = file.readline().strip()
+#
+# CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
+
+CONN_STRING = "host=" + environ['HOST'] + " dbname=" + environ['DBNAME'] + " user=" + environ['USER'] + " password=" + environ['PW']
 
 HOF_UPDATE = "UPDATE player_halloffame SET (playerid, region) = (%s,%s) WHERE hofid = %s AND place = %s;"
 
 def update():
     """Update Hall of Fame data"""
-    conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
-    conn = psycopg2.connect(conn_string)
+    conn = psycopg2.connect(CONN_STRING)
     cursor = conn.cursor()
     for hofid in range(1, 9):
         if hofid == 1:

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Take player data, request matches and save it to the database"""
 
+from os import environ
 import json
 import time
 import psycopg2
@@ -13,13 +14,15 @@ import UpdateHallOfFame
 with open("key") as file:
     KEY = {"api_key": file.readline().strip()}
 
-with open("db_config") as file:
-    HOST = file.readline().strip()
-    DBNAME = file.readline().strip()
-    USER = file.readline().strip()
-    PASS = file.readline().strip()
+# with open("db_config") as file:
+#     HOST = file.readline().strip()
+#     DBNAME = file.readline().strip()
+#     USER = file.readline().strip()
+#     PASS = file.readline().strip()
+#
+# CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
 
-CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
+CONN_STRING = "host=" + environ['HOST'] + " dbname=" + environ['DBNAME'] + " user=" + environ['USER'] + " password=" + environ['PW']
 
 def get_all_recent_matches():
     """Get recent matches for all players"""

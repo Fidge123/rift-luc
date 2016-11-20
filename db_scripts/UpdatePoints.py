@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """Calculate points for a certain game and player"""
+
+from os import environ
 import json
 import time
 import psycopg2
@@ -9,11 +11,16 @@ import requests
 with open("key") as file:
     KEY = {"api_key": file.readline().strip()}
 
-with open("db_config") as file:
-    HOST = file.readline().strip()
-    DBNAME = file.readline().strip()
-    USER = file.readline().strip()
-    PASS = file.readline().strip()
+
+# with open("db_config") as file:
+#     HOST = file.readline().strip()
+#     DBNAME = file.readline().strip()
+#     USER = file.readline().strip()
+#     PASS = file.readline().strip()
+#
+# CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
+
+CONN_STRING = "host=" + environ['HOST'] + " dbname=" + environ['DBNAME'] + " user=" + environ['USER'] + " password=" + environ['PW']
 
 ### Common queries ###
 P_UPDATE = "UPDATE player SET points = points + %s WHERE id = %s;"
@@ -230,8 +237,7 @@ def calculate_points(settings, match):
         response = requests.get(api + "/v2.2/match/" + str(settings["match_id"]), params=KEY)
 
     game = json.loads(response.text)
-    conn_string = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
-    conn = psycopg2.connect(conn_string)
+    conn = psycopg2.connect(CONN_STRING)
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     calculate_repeatable(settings, match, game, cursor)

@@ -2,10 +2,15 @@ version: '2'
 services:
     py:
         build: .
+        environment:
+            HOST: pg
+            DBNAME: luc
+            USER: postgres
+            PW: test
         volumes:
         - .:/code
-        depends_on:
-        - db
+        links:
+        - db:pg
     db:
         image: postgres
         environment:
@@ -36,7 +41,7 @@ services:
     fe:
         image: nginx
         ports:
-        - 80:80
+        - 8000:80
         depends_on:
         - api
         volumes:
