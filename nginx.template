@@ -1,8 +1,8 @@
 server {
     listen 80;
 
-    location /api {
-      proxy_pass http://${IP}:3000;
+    location /api/ {
+      proxy_pass http://${IP}:3000/;
     }
 
     location / {
