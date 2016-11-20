@@ -116,8 +116,8 @@ def main():
             elif opt[0] == "--reset":
                 delete()
                 create()
-                fill(opts)
             elif opt[0] == "--start":
+                fill(opts)
                 s_time = time.time()
                 t1 = Thread(target = update_loop(s_time))
                 t2 = Thread(target = verify_loop(s_time))
