@@ -7,6 +7,7 @@ CREATE TABLE player (
 	region text NOT NULL,
     iconid integer,
     leagueid integer,
+	created bigint,
 	wins integer DEFAULT 0,
 	winstreak integer DEFAULT 0,
 	losestreak integer DEFAULT 0,
@@ -64,6 +65,7 @@ CREATE TABLE game (
 	id bigint NOT NULL,
 	playerid integer NOT NULL,
 	region text NOT NULL,
+	created bigint,
 	json text
 );
 

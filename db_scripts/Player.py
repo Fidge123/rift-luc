@@ -3,8 +3,10 @@
 
 from os import environ
 import json
+import time
 import psycopg2
 import requests
+import GetRecentMatches
 
 with open("key") as file:
     KEY = {"api_key": file.readline().strip()}
@@ -32,10 +34,12 @@ def copy_from_users():
         if cursor.rowcount == 0:
             url = "https://" + user["region"] + ".api.pvp.net/api/lol/" + user["region"] + "/v1.4/summoner/by-name/" + user["leaguename"]
             player = json.loads(requests.get(url, params=KEY).text)[user["leaguename"].lower().replace(" ", "")]
-            query = "INSERT INTO player (id, leaguename, region, iconid) VALUES (%s,%s,%s,%s);"
-            data = (player["id"], user["leaguename"], user["region"], player["profileIconId"])
+            query = "INSERT INTO player (id, leaguename, region, iconid, created) VALUES (%s,%s,%s,%s,%s);"
+            timestamp = int(round(time.time()*1000))
+            data = (player["id"], user["leaguename"], user["region"], player["profileIconId"], timestamp)
             cursor.execute(query, data)
             CONN.commit()
+            GetRecentMatches.get_recent_matches(player["id"], user["region"], timestamp)
 
 def update(attribute, value, settings, cursor):
     """Write data to table"""
