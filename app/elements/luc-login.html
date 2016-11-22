@@ -10,17 +10,14 @@
         .login-field {
             background-color: lightgrey;
             width: 400px;
-            height: 160px;
+            height: 200px;
             margin: auto;
         }
         .inputs {
-            padding: 40px 20px 10px 20px;
+            padding: 10px 20px;
         }
-        .inputs label {
-            line-height: 1.5em;
-        }
-        .inputs input {
-            width: 70%;
+        .inputs paper-input {
+            width: 100%;
             float: right;
             clear: both;
         }
@@ -30,22 +27,20 @@
             padding: 10px 20px;
         }
     </style>
-    <iron-ajax id="login" url="localhost:8000/api/rpc/login"></iron-ajax>
-    <iron-ajax id="signup" url="localhost:8000/api/rpc/signup"></iron-ajax>
+    <iron-ajax id="login" method="POST" content-type="application/json" url="/api/rpc/login" on-response="handleLogin" on-error="handleError"></iron-ajax>
+    <iron-ajax id="signup" method="POST" content-type="application/json" url="/api/rpc/signup" on-response="handleRegister" on-error="handleError"></iron-ajax>
+    <iron-ajax id="current_id" method="POST" content-type="application/json" url="/api/rpc/current_id" on-response="handleLoggedIn"></iron-ajax>
     <div class="login-field">
         <div class="inputs">
-            <label>
-                Summoner: <input type="text" />
-            </label>
-            <label>
-                Password: <input type="password" />
-            </label>
+            <paper-input id="summoner" label="Summoner Name" type="text"></paper-input>
+            <paper-input id="pw" label="Password" type="password"></paper-input>
         </div>
         <div class="buttons">
-            <button>Register</button>
-            <button>Login</button>
+            <paper-button on-click="register">Register</paper-button>
+            <paper-button on-click="login">Login</paper-button>
         </div>
     </div>
+    <paper-toast id="toast"></paper-toast>
   </template>
 
   <script>
@@ -56,6 +51,50 @@
         is: 'luc-login',
 
         properties: {
+        },
+
+        handleClick: function (id) {
+            var ajax = document.getElementById(id);
+            ajax.body = JSON.stringify({
+                "leaguename": document.getElementById("summoner").value,
+                "pass": document.getElementById("pw").value,
+                "region": "EUW"
+            });
+            ajax.generateRequest();
+        },
+
+        register: function () {
+            this.handleClick("signup");
+        },
+
+        handleRegister: function () {
+            document.getElementById("toast").show({text: "Erfolgreich registriert. Login sollte in 1-2 Minuten möglich sein.", duration: 3000});
+        },
+
+        login: function () {
+            this.handleClick("login");
+        },
+
+        handleLogin: function () {
+            var response = document.getElementById("login").lastResponse;
+            document.cookie = "token=" + response.token;
+
+            var current_id = document.getElementById("current_id");
+            current_id.withCredentials = true;
+            current_id.body = JSON.stringify({});
+            current_id.headers["Authorization"] = "Bearer " + response.token;
+            current_id.generateRequest();
+        },
+
+        handleLoggedIn: function () {
+            var response = document.getElementById("current_id").lastResponse;
+            document.cookie = "id=" + response.id;
+
+            page.redirect("/profile");
+        },
+
+        handleError: function () {
+            document.getElementById("toast").show({text: "Ein Fehler ist aufgetreten. Fidge123 und kurojutsu können (hoffentlich) helfen :D", duration: 10000});
         }
       });
     })();
