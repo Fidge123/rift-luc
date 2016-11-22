@@ -1,0 +1,1 @@
+!function(n){"use strict";var e=n.querySelector("#app");e.baseUrl="/",""===window.location.port,e.addEventListener("dom-change",function(){}),window.addEventListener("WebComponentsReady",function(){}),e.scrollPageToTop=function(){e.$.headerPanelMain.scrollToTop()}}(document);
