@@ -22,11 +22,14 @@ def fill_achievement_table():
     """Main function"""
     conn = psycopg2.connect(CONN_STRING)
     cursor = conn.cursor()
-    query = "INSERT INTO achievement(name, description, points) VALUES (%s,%s,%s);"
-
+    
     for item in ACHIEVEMENTS:
+        query = "SELECT name, description, points FROM achievement WHERE name = %s AND description = %s AND points = %s;"
         data = (item["name"], item["description"], item["points"])
-        cursor.execute(query, data)
+        cursor.execute(query,data)
+        if cursor.rowcount == 0:    #new achievement
+            query = "INSERT INTO achievement(name, description, points) VALUES (%s,%s,%s);"
+            cursor.execute(query, data)
 
     conn.commit()
     cursor.close()

@@ -22,11 +22,14 @@ def fill_repeatable_table():
     """Main function"""
     conn = psycopg2.connect(CONN_STRING)
     cursor = conn.cursor()
-    query = "INSERT INTO repeatable(name, description, points) VALUES (%s,%s,%s);"
-
+    
     for item in REPEATABLES:
+        query = "SELECT name, description, points FROM repeatable WHERE name = %s AND description = %s AND points = %s;"
         data = (item["description"], item["description"], item["points"])
-        cursor.execute(query, data)
+        cursor.execute(query,data)
+        if cursor.rowcount == 0:
+            query = "INSERT INTO repeatable(name, description, points) VALUES (%s,%s,%s);"
+            cursor.execute(query, data)
 
     conn.commit()
     cursor.close()

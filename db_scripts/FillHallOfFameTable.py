@@ -22,11 +22,15 @@ def fill_hall_of_fame_table():
     """Main function"""
     conn = psycopg2.connect(CONN_STRING)
     cursor = conn.cursor()
-    query = "INSERT INTO halloffame(name, description, pointsfirst, pointssecond, pointsthird) VALUES (%s,%s,%s,%s,%s);"
-
+    
     for item in HOF:
-        data = (item["description"], item["description"], item["firstPlace"], item["secondPlace"], item["thirdPlace"])
-        cursor.execute(query, data)
+        query = "SELECT name, description FROM halloffame WHERE name = %s AND description = %s;"
+        data = (item["description"], item["description"])
+        cursor.execute(query,data)
+        if cursor.rowcount == 0:
+            data = (item["description"], item["description"], item["firstPlace"], item["secondPlace"], item["thirdPlace"])
+            query = "INSERT INTO halloffame(name, description, pointsfirst, pointssecond, pointsthird) VALUES (%s,%s,%s,%s,%s);"
+            cursor.execute(query, data)
 
     conn.commit()
     cursor.close()
