@@ -65,9 +65,9 @@
         }
     </style>
     <iron-ajax id="a_player" url="/api/player" params='{"order":"points.desc.nullslast", "select":"leaguename,points,id,iconid"}' headers="{{header}}" on-response="handlePlayerInfo" auto></iron-ajax>
-    <iron-ajax id="a_pam" url="/api/player_achievement_match" params='{"playerid":"eq.{{pid}}"}' headers="{{header}}" on-response="handleAchievements" auto></iron-ajax>
+    <iron-ajax id="a_pam" url="/api/player_achievement_match" params='{{param}}' headers="{{header}}" on-response="handleAchievements" auto></iron-ajax>
     <iron-ajax id="a_achieve" url="/api/achievement" headers="{{header}}" last-response="{{aList}}" auto></iron-ajax>
-    <iron-ajax id="a_grp" url="/api/game_repeatable_player" params='{"playerid":"eq.{{pid}}"}' headers="{{header}}" on-response="handleRepeatables" auto></iron-ajax>
+    <iron-ajax id="a_grp" url="/api/game_repeatable_player" params='{{param}}' headers="{{header}}" on-response="handleRepeatables" auto></iron-ajax>
     <iron-ajax id="a_repeat" url="/api/repeatable" headers="{{header}}" last-response="{{rList}}" auto></iron-ajax>
     <div class="main">
         <div class="header">
@@ -167,6 +167,9 @@
             src: {
                 type: String,
                 notifies: true
+            },
+            param: {
+                type: Object
             }
         },
 
@@ -248,6 +251,7 @@
             }
 
             this.pid = this.getCookie("id");
+            this.param = {"playerid":"eq." + this.pid};
             this.header = {"Authorization": "Bearer " + this.getCookie("token")};
         }
       });
