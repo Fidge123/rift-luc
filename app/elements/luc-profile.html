@@ -213,7 +213,7 @@
             var pid = this.pid;
             var response = document.getElementById("a_player").lastResponse;
             var data = response.filter(function (d) {
-                return d.id === pid;
+                return d.id == pid;
             });
             var index = response.indexOf(data);
             if (index > -1) {
@@ -222,7 +222,6 @@
                 this.points = data[index].points;
             } else {
                 console.log(response);
-                console.log(data);
             }
         },
 
