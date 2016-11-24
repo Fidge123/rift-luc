@@ -89,7 +89,7 @@
                             Achievements
                         </div>
                         <div class="stats">
-                            {{achievements}}
+                            {{achievements.points}} Punkte ({{achievements.count}})
                         </div>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
                             Repeatables
                         </div>
                         <div class="stats">
-                            {{repeatables}}
+                            {{repeatables.points}} Punkte
                         </div>
                     </div>
                 </div>
@@ -115,7 +115,7 @@
                             Hall of Fame
                         </div>
                         <div class="stats">
-                            Noch nicht verfügbar
+                            Nicht verfügbar
                         </div>
                     </div>
                 </div>
@@ -134,18 +134,23 @@
         properties: {
             player: {
                 type: String
+                value: "???"
             },
             place: {
-                type: Object
+                type: String,
+                value: "?"
             },
             points: {
-                type: String
+                type: Number,
+                value: 0
             },
             achievements: {
-                type: String
+                type: Object,
+                value: {}
             },
             repeatables: {
-                type: String
+                type: Object,
+                value: {}
             },
             pid: {
                 type: Number
@@ -181,12 +186,13 @@
                     that.handleAchievements(response);
                 }, 200);
             } else {
-                this.achievements = response.reduce(function (value, element) {
+                this.achievements.points = response.reduce(function (value, element) {
                     var achievement = that.aList.filter(function (a) {
                         return a.id === element.achievementid;
                     });
                     return value + achievement[0].points;
                 }, 0);
+                this.points += this.achievements.points;
             }
         },
 
@@ -198,7 +204,6 @@
                     console.log("waiting R");
                     that.handleRepeatables(response);
                 }, 200);
-                return;
             } else {
                 this.repeatables = response.reduce(function (value, element) {
                     var repeatable = that.rList.filter(function (r) {
@@ -206,6 +211,7 @@
                     });
                     return value + repeatable[0].points;
                 }, 0);
+                this.points += this.repeatables.points;
             }
         },
 
@@ -219,7 +225,6 @@
             if (index > -1) {
                 this.place = index + 1;
                 this.player = data.leaguename;
-                this.points = data.points;
             } else {
                 console.log(response);
             }
