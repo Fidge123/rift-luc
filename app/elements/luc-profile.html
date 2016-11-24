@@ -146,13 +146,11 @@
             },
             achievements: {
                 type: Object,
-                notifies: true,
-                value: {}
+                notifies: true
             },
             repeatables: {
                 type: Object,
-                notifies: true,
-                value: {}
+                notifies: true
             },
             pid: {
                 type: Number
@@ -198,8 +196,10 @@
                     });
                     return value + achievement[0].points;
                 }, 0);
-                this.achievements.points = points;
-                this.achievements.count = response.length;
+                this.achievements = {
+                    points: points,
+                    count: response.length
+                };
                 this.points += points;
             }
         },
@@ -219,7 +219,9 @@
                     });
                     return value + repeatable[0].points;
                 }, 0);
-                this.repeatables.points = points;
+                this.repeatables.points = {
+                    points: points
+                };
                 this.points += points;
             }
         },
