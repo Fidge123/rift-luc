@@ -95,6 +95,12 @@
 
         handleError: function () {
             document.getElementById("toast").show({text: "Ein Fehler ist aufgetreten. Fidge123 und kurojutsu können (hoffentlich) helfen :D", duration: 10000});
+        },
+
+        ready: function () {
+            if (document.cookie.indexOf("token=") !== -1) {
+                page.redirect("/profile");
+            }
         }
       });
     })();

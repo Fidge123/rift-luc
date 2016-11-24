@@ -7,163 +7,120 @@
         :host {
             display: block;
         }
-        .header {
-            display: block;
-            height: 120px;
-            width: 100%;
-            padding-top: 20px;
-            margin-bottom: 40px;
+        .main {
+            width: 800px;
+            margin: auto;
         }
-        .header > .icon {
-            float: left;
-            padding: 0px 20px 0px 10px;
-            height: 120px;
+        .metadata {
+            width: 800px;
+            height: 160px;
+            padding-bottom: 30px;
         }
-        .header > .name {
-            float: left;
-            font-size: 60px;
-            max-width: 80%;
+        .metadata > * {
+            display: inline-block;
+        }
+        .icon {
+            width: 160px;
+            height: 160px;
+        }
+        .name {
+            vertical-align: top;
+            width: 350px;
             overflow: hidden;
-            margin-top: 25px;
+            text-overflow: ellipsis;
+            padding: 20px;
+            font-size: 36px;
         }
-        .header > .points {
-            float: right;
-            font-size: 40px;
-            margin-top: 35px;
-        }
-        .overview {
-            display: block;
-            height: 250px;
-            margin-bottom: 40px;
-        }
-        .overview > * {
-            float: left;
-            width: 33%;
-            text-decoration: none;
-        }
-        .overview > * > paper-material {
-            background: #4079c4;
-            color: #fff;
-            width: 250px;
-            height: 250px;
-        }
-        .overview > * > paper-material > .symbol {
-            margin-left: 75px;
-            width: 100px;
-            height: 100px;
-        }
-        .overview > * > paper-material > .title {
-            text-align: center;
-            line-height: 50px;
-            font-size: 30px;
-            margin-bottom: 10px;
-        }
-        .overview > * > paper-material > .stats {
-            text-align: center;
-            line-height: 90px;
-            font-size: 30px;
-        }
-        .league {
-            margin-left: 10px;
-            line-height: 90px;
-            font-size: 40px;
-        }
-        .row {
-            display: block;
-            height: 50px;
-            line-height: 30px;
-            margin-bottom: 0;
-        }
-        .row > .left {
-            float: left;
-            padding: 10px;
-        }
-        .row > .points {
-            float: right;
-            padding: 10px;
-        }
-        .row > .points::before {
-            content: "Points: ";
-        }
-        .big {
-            font-size: 28px;
-        }
-        .small {
+        .overall {
             font-size: 24px;
+            width: 240px;
+            vertical-align: top;
+            text-align: right;
+        }
+        .overall * {
+            padding-top: 20px;
+        }
+        .overview * {
+            display: inline-block;
+        }
+        .card {
+            background: #eee;
+            width: 240px;
+            height: 80px;
+        }
+        .pad {
+            margin: 0 35px;
+        }
+        .cap {
+            width: 80px;
+            text-align: center;
+            line-height: 80px;
+            font-size: 36px;
+        }
+        .details {
+            width: 150px;
+        }
+        .details * {
+            display: block;
         }
     </style>
-    <iron-ajax
-        id="leaderboardLoaer" auto
-        url="/player"
-        params='{"order": "points.desc", "leagueid": "eq.0"}'
-        last-response="{{players}}"
-        on-response="handlePlayer"></iron-ajax>
-    <iron-ajax
-        id="leaderboardLoaer"
-        url="/player"
-        params='{"order": "points.desc", "leagueid": "eq.0"}'
-        last-response="{{players}}"></iron-ajax>
-    <paper-material elevation="1">
+    <iron-ajax id="a_player" url="/api/player" params='{"order":"points.desc.nullslast", "select":"leaguename,points,id"}' headers="{{header}}" on-response="handlePlayerInfo" auto></iron-ajax>
+    <iron-ajax id="a_pam" url="/api/player_achievement_match" params='{"playerid":"eq.21636783"}' headers="{{header}}" on-response="handleAchievements" auto></iron-ajax>
+    <iron-ajax id="a_achieve" url="/api/achievement" headers="{{header}}" last-response="{{aList}}" auto></iron-ajax>
+    <iron-ajax id="a_grp" url="/api/game_repeatable_player" params='{"playerid":"eq.21636783"}' headers="{{header}}" on-response="handleRepeatables" auto></iron-ajax>
+    <iron-ajax id="a_repeat" url="/api/repeatable" headers="{{header}}" last-response="{{rList}}" auto></iron-ajax>
+    <div class="main">
         <div class="header">
-            <img class="icon" src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/588.png"/>
-            <div class="name">
-                Fidge1234
+            <div class="metadata">
+                <img class="icon" src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/588.png"/>
+                <div class="name">{{player}}</div>
+                <div class="overall">
+                    <div>{{place}}. Platz</div>
+                    <div>{{points}} Punkte</div>
+                </div>
             </div>
-            <div class="points">
-                100 Points
+            <div class="overview">
+                <div class="card">
+                    <div class="cap">
+                        A
+                    </div>
+                    <div class="details">
+                        <div class="title">
+                            Achievements
+                        </div>
+                        <div class="stats">
+                            {{achievements}}
+                        </div>
+                    </div>
+                </div>
+                <div class="card pad">
+                    <div class="cap">
+                        R
+                    </div>
+                    <div class="details">
+                        <div class="title">
+                            Repeatables
+                        </div>
+                        <div class="stats">
+                            {{repeatables}}
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="cap">
+                        H
+                    </div>
+                    <div class="details">
+                        <div class="title">
+                            Hall of Fame
+                        </div>
+                        <div class="stats">
+                            Noch nicht verfügbar
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="overview">
-            <a data-route="achievements" href="{{baseUrl}}achievements" class="achievements">
-                <paper-material elevation="2">
-                    <div class="title">
-                        Achievements
-                    </div>
-                    <iron-image sizing="contain" class="symbol" src="images/achievements.png"></iron-image>
-                    <div class="stats">
-                        22 of 45
-                    </div>
-                </paper-material>
-            </a>
-            <a data-route="achievements" href="{{baseUrl}}halloffame" class="halloffame">
-                <paper-material elevation="2">
-                    <div class="title">
-                        Hall of Fame
-                    </div>
-                    <iron-image sizing="contain" class="symbol" src="images/halloffame.png"></iron-image>
-                    <div class="stats">
-                        stuff
-                    </div>
-                </paper-material>
-            </a>
-            <a data-route="achievements" href="{{baseUrl}}repeatables" class="repeatables">
-                <paper-material elevation="2">
-                    <div class="title">
-                        Repeatables
-                    </div>
-                    <iron-image sizing="contain" class="symbol" src="images/repeatables.png"></iron-image>
-                    <div class="stats">
-                        1600 Points
-                    </div>
-                </paper-material>
-            </a>
-        </div>
-        <div class="league">
-            League: Korean Overlords
-        </div>
-        <div class="leaderboard">
-            <template is="dom-repeat" items="[[players]]">
-                <paper-material class="row" elevation="1">
-                    <div class="left big">[[index]]. Place</div>
-                    <div class="left big">[[item.leaguename]]</div>
-                    <div class="points small">[[item.points]]</div>
-                </paper-material>
-            </template>
-        </div>
-    </paper-material>
-
-    <paper-material elevation="1">
-        <a href='http://www.freepik.com/free-vector/award-icons_799927.htm' style="text-decoration:none;color:#888;">Designed using images by Freepik</a>
     </paper-material>
   </template>
 
@@ -175,15 +132,88 @@
         is: 'luc-profile',
 
         properties: {
-            players: {
-                type: Array,
-                notifies: true
-            },
-
             player: {
-                type: Object,
-                notifies: true
+                type: String
+            },
+            place: {
+                type: Object
+            },
+            points: {
+                type: String
+            },
+            achievements: {
+                type: String
+            },
+            repeatables: {
+                type: String
+            },
+            pid: {
+                type: Number
+            },
+            header: {
+                type: Object
+            },
+            aList: {
+                type: Array
+            },
+            rList: {
+                type: Array
             }
+        },
+
+        getCookie: function (key) {
+            var cookieIndex = document.cookie.indexOf(key + "=");
+            var endIndex = document.cookie.indexOf(";", cookieIndex);
+            endIndex = endIndex < cookieIndex ? document.cookie.length : endIndex;
+
+            if (cookieIndex !== -1) {
+                return document.cookie.substring(cookieIndex + key.length + 1, endIndex);
+            }
+            return "";
+        },
+
+        handleAchievements: function (response) {
+            if (!this.aList) {
+                setTimeout(function () {
+                    console.log("waiting A");
+                    this.handleAchievements(response);
+                }, 200);
+            }
+        },
+
+        handleRepeatables: function (response) {
+            if (!this.rList) {
+                setTimeout(function () {
+                    console.log("waiting R");
+                    this.handleRepeatables(response);
+                }, 200);
+                return;
+            } else {
+                this.repeatables = response.reduce(function (value, element) {
+                    var repeatable = rList.filter(function (r) {
+                        return r.id === element.repeatableid;
+                    });
+                    return value + repeatable[0].points;
+                }, 0);
+            }
+        },
+
+        handlePlayerInfo: function (response) {
+            var data = response.filter(function (d) {
+                return d.id === this.pid;
+            });
+            this.place = response.indexOf(data) + 1;
+            this.player = data.leaguename;
+            this.points = data.points;
+        },
+
+        ready: function () {
+            if (document.cookie.indexOf("token=") === -1) {
+                page.redirect("/login");
+            }
+
+            this.pid = this.getCookie("id");
+            this.header = {"Authorization": "Bearer " + this.getCookie("token")};
         }
       });
     })();
