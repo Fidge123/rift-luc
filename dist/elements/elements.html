@@ -22344,9 +22344,9 @@ module.exports = Array.isArray || function (arr) {
         }
     </style>
     <iron-ajax id="a_player" url="/api/player" params="{&quot;order&quot;:&quot;points.desc.nullslast&quot;, &quot;select&quot;:&quot;leaguename,points,id,iconid&quot;}" headers="{{header}}" on-response="handlePlayerInfo" auto=""></iron-ajax>
-    <iron-ajax id="a_pam" url="/api/player_achievement_match" params="{&quot;playerid&quot;:&quot;eq.21636783&quot;}" headers="{{header}}" on-response="handleAchievements" auto=""></iron-ajax>
+    <iron-ajax id="a_pam" url="/api/player_achievement_match" params="{&quot;playerid&quot;:&quot;eq.{{pid}}&quot;}" headers="{{header}}" on-response="handleAchievements" auto=""></iron-ajax>
     <iron-ajax id="a_achieve" url="/api/achievement" headers="{{header}}" last-response="{{aList}}" auto=""></iron-ajax>
-    <iron-ajax id="a_grp" url="/api/game_repeatable_player" params="{&quot;playerid&quot;:&quot;eq.21636783&quot;}" headers="{{header}}" on-response="handleRepeatables" auto=""></iron-ajax>
+    <iron-ajax id="a_grp" url="/api/game_repeatable_player" params="{&quot;playerid&quot;:&quot;eq.{{pid}}&quot;}" headers="{{header}}" on-response="handleRepeatables" auto=""></iron-ajax>
     <iron-ajax id="a_repeat" url="/api/repeatable" headers="{{header}}" last-response="{{rList}}" auto=""></iron-ajax>
     <div class="main">
         <div class="header">
