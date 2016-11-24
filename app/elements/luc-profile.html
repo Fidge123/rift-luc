@@ -133,7 +133,7 @@
 
         properties: {
             player: {
-                type: String
+                type: String,
                 value: "???"
             },
             place: {
@@ -186,13 +186,14 @@
                     that.handleAchievements(response);
                 }, 200);
             } else {
-                this.achievements.points = response.reduce(function (value, element) {
+                var points = response.reduce(function (value, element) {
                     var achievement = that.aList.filter(function (a) {
                         return a.id === element.achievementid;
                     });
                     return value + achievement[0].points;
                 }, 0);
-                this.points += this.achievements.points;
+                this.achievements.points = points;
+                this.points += points;
             }
         },
 
@@ -205,13 +206,14 @@
                     that.handleRepeatables(response);
                 }, 200);
             } else {
-                this.repeatables = response.reduce(function (value, element) {
+                var points = response.reduce(function (value, element) {
                     var repeatable = that.rList.filter(function (r) {
                         return r.id === element.repeatableid;
                     });
                     return value + repeatable[0].points;
                 }, 0);
-                this.points += this.repeatables.points;
+                this.repeatables.points = points;
+                this.points += points;
             }
         },
 
