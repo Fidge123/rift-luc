@@ -64,7 +64,7 @@
             display: block;
         }
     </style>
-    <iron-ajax id="a_player" url="/api/player" params='{"order":"points.desc.nullslast", "select":"leaguename,points,id"}' headers="{{header}}" on-response="handlePlayerInfo" auto></iron-ajax>
+    <iron-ajax id="a_player" url="/api/player" params='{"order":"points.desc.nullslast", "select":"leaguename,points,id,iconid"}' headers="{{header}}" on-response="handlePlayerInfo" auto></iron-ajax>
     <iron-ajax id="a_pam" url="/api/player_achievement_match" params='{"playerid":"eq.21636783"}' headers="{{header}}" on-response="handleAchievements" auto></iron-ajax>
     <iron-ajax id="a_achieve" url="/api/achievement" headers="{{header}}" last-response="{{aList}}" auto></iron-ajax>
     <iron-ajax id="a_grp" url="/api/game_repeatable_player" params='{"playerid":"eq.21636783"}' headers="{{header}}" on-response="handleRepeatables" auto></iron-ajax>
@@ -72,7 +72,7 @@
     <div class="main">
         <div class="header">
             <div class="metadata">
-                <img class="icon" src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/588.png"/>
+                <img class="icon" src$="{{src}}" />
                 <div class="name">{{player}}</div>
                 <div class="overall">
                     <div>{{place}}. Platz</div>
@@ -146,10 +146,12 @@
             },
             achievements: {
                 type: Object,
+                notifies: true,
                 value: {}
             },
             repeatables: {
                 type: Object,
+                notifies: true,
                 value: {}
             },
             pid: {
@@ -163,6 +165,10 @@
             },
             rList: {
                 type: Array
+            },
+            src: {
+                type: String,
+                notifies: true
             }
         },
 
@@ -193,6 +199,7 @@
                     return value + achievement[0].points;
                 }, 0);
                 this.achievements.points = points;
+                this.achievements.count = response.length;
                 this.points += points;
             }
         },
@@ -227,6 +234,7 @@
             if (index > -1) {
                 this.place = index + 1;
                 this.player = data.leaguename;
+                this.src = "http://ddragon.leagueoflegends.com/cdn/6.23.1/img/profileicon/" + data.iconid + ".png"
             } else {
                 console.log(response);
             }
