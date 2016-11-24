@@ -5,6 +5,7 @@ from os import environ
 import json
 import requests
 import psycopg2
+import time
 
 with open("key") as file:
     KEY = {"api_key": file.readline().strip()}
@@ -31,8 +32,23 @@ def get_champions(region):
     api = "https://" + region + ".api.pvp.net/api/lol/" + region
     static = "https://global.api.pvp.net/api/lol/static-data/" + region
 
-    champs = json.loads(requests.get(api + "/v1.2/champion", params=KEY).text)["champions"]
-    s_champs = json.loads(requests.get(static + "/v1.2/champion", params=KEY).text)["data"]
+    response = requests.get(api + "/v1.2/champion", params=KEY)
+    while response.status_code != 200:
+        if response.status_code == 404:
+            return
+        print(str(response.status_code) + ": Request failed, waiting 10 seconds")
+        time.sleep(10)
+        response = requests.get(api + "/v1.2/champion", params=KEY)
+    champs = json.loads(response.text)["champions"]
+
+    response = requests.get(static + "/v1.2/champion", params=KEY)
+    while response.status_code != 200:
+        if response.status_code == 404:
+            return
+        print(str(response.status_code) + ": Request failed, waiting 10 seconds")
+        time.sleep(10)
+        response = requests.get(static + "/v1.2/champion", params=KEY)
+    s_champs = json.loads(response.text)["data"]
 
     champions = []
     names = []
