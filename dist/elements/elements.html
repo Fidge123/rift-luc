@@ -22497,8 +22497,8 @@ module.exports = Array.isArray || function (arr) {
             var index = response.indexOf(data);
             if (index > -1) {
                 this.place = index + 1;
-                this.player = data[index].leaguename;
-                this.points = data[index].points;
+                this.player = data.leaguename;
+                this.points = data.points;
             } else {
                 console.log(response);
             }
