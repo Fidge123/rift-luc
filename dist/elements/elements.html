@@ -22653,7 +22653,7 @@ module.exports = Array.isArray || function (arr) {
             width: 50%;
         }
     </style>
-    <iron-ajax id="modeLoader" auto="" url="http://localhost:3000/achievement" last-response="{{achievements}}"></iron-ajax>
+    <iron-ajax id="modeLoader" auto="" url="/api/achievement" last-response="{{achievements}}"></iron-ajax>
     <h1>Achievements</h1>
     <template is="dom-repeat" items="[[achievements]]">
         <paper-material id="{{index}}" elevation="1">
@@ -22693,7 +22693,7 @@ module.exports = Array.isArray || function (arr) {
         }
     </style>
     
-    <iron-ajax id="modeLoader" auto="" url="http://localhost:3000/halloffame" last-response="{{halloffame}}"></iron-ajax>
+    <iron-ajax id="modeLoader" auto="" url="/api/halloffame" last-response="{{halloffame}}"></iron-ajax>
     <h1>Hall of Fame</h1>
     <template is="dom-repeat" items="[[halloffame]]">
         <paper-material id="{{index}}" elevation="1">
@@ -22734,7 +22734,7 @@ module.exports = Array.isArray || function (arr) {
             width: 50%;
         }
     </style>
-    <iron-ajax id="modeLoader" auto="" url="http://localhost:3000/repeatable" last-response="{{games}}"></iron-ajax>
+    <iron-ajax id="modeLoader" auto="" url="/api/repeatable" last-response="{{games}}"></iron-ajax>
     <h1>Repeatables</h1>
     <template is="dom-repeat" items="[[games]]">
         <paper-material id="{{index}}" elevation="1">
