@@ -22451,25 +22451,36 @@ module.exports = Array.isArray || function (arr) {
             return "";
         },
 
-        handleAchievements: function (response) {
+        handleAchievements: function () {
+            var response = document.getElementById("a_pam").lastResponse;
             if (!this.aList) {
+                var that = this;
                 setTimeout(function () {
                     console.log("waiting A");
-                    this.handleAchievements(response);
+                    that.handleAchievements(response);
                 }, 200);
+            } else {
+                this.achievements = response.reduce(function (value, element) {
+                    var achievement = that.aList.filter(function (a) {
+                        return a.id === element.achievementid;
+                    });
+                    return value + achievement[0].points;
+                }, 0);
             }
         },
 
-        handleRepeatables: function (response) {
+        handleRepeatables: function () {
+            var that = this;
+            var response = document.getElementById("a_grp").lastResponse;
             if (!this.rList) {
                 setTimeout(function () {
                     console.log("waiting R");
-                    this.handleRepeatables(response);
+                    that.handleRepeatables(response);
                 }, 200);
                 return;
             } else {
                 this.repeatables = response.reduce(function (value, element) {
-                    var repeatable = rList.filter(function (r) {
+                    var repeatable = that.rList.filter(function (r) {
                         return r.id === element.repeatableid;
                     });
                     return value + repeatable[0].points;
@@ -22477,10 +22488,11 @@ module.exports = Array.isArray || function (arr) {
             }
         },
 
-        handlePlayerInfo: function (response) {
+        handlePlayerInfo: function () {
+            var response = document.getElementById("a_player").lastResponse;
             var data = response.filter(function (d) {
                 return d.id === this.pid;
-            });
+            })[0];
             this.place = response.indexOf(data) + 1;
             this.player = data.leaguename;
             this.points = data.points;
