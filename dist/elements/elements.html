@@ -22604,7 +22604,7 @@ module.exports = Array.isArray || function (arr) {
 
         handleLoggedIn: function () {
             var response = document.getElementById("current_id").lastResponse;
-            document.cookie = "id=" + response.id;
+            document.cookie = "id=" + response[0].id;
 
             page.redirect("/profile");
         },
