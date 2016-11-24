@@ -214,7 +214,7 @@
             var response = document.getElementById("a_player").lastResponse;
             var data = response.filter(function (d) {
                 return d.id == pid;
-            });
+            })[0];
             var index = response.indexOf(data);
             if (index > -1) {
                 this.place = index + 1;
