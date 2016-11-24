@@ -16,7 +16,8 @@
     <iron-ajax
         id="modeLoader" auto
         url="/api/halloffame"
-        last-response="{{halloffame}}"></iron-ajax>
+        last-response="{{halloffame}}"
+        headers="{{header}}"></iron-ajax>
     <h1>Hall of Fame</h1>
     <template is="dom-repeat" items="[[halloffame]]">
         <paper-material id="{{index}}" elevation="1">
@@ -37,10 +38,28 @@
         is: 'luc-halloffame',
 
         properties: {
+            header: {
+                type: Object
+            },
             halloffame: {
                 type: Array,
                 notifies: true
             }
+        },
+
+        getCookie: function (key) {
+            var cookieIndex = document.cookie.indexOf(key + "=");
+            var endIndex = document.cookie.indexOf(";", cookieIndex);
+            endIndex = endIndex < cookieIndex ? document.cookie.length : endIndex;
+
+            if (cookieIndex !== -1) {
+                return document.cookie.substring(cookieIndex + key.length + 1, endIndex);
+            }
+            return "";
+        },
+
+        ready: function () {
+            this.header = {"Authorization": "Bearer " + this.getCookie("token")};
         }
       });
     })();

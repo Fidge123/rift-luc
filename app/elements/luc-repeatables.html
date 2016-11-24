@@ -15,7 +15,8 @@
     <iron-ajax
         id="modeLoader" auto
         url="/api/repeatable"
-        last-response="{{games}}"></iron-ajax>
+        last-response="{{games}}"
+        headers="{{header}}"></iron-ajax>
     <h1>Repeatables</h1>
     <template is="dom-repeat" items="[[games]]">
         <paper-material id="{{index}}" elevation="1">
@@ -34,10 +35,28 @@
         is: 'luc-repeatables',
 
         properties: {
+            header: {
+                type: Object
+            },
             games: {
                 type: Array,
                 notifies: true
             }
+        },
+
+        getCookie: function (key) {
+            var cookieIndex = document.cookie.indexOf(key + "=");
+            var endIndex = document.cookie.indexOf(";", cookieIndex);
+            endIndex = endIndex < cookieIndex ? document.cookie.length : endIndex;
+
+            if (cookieIndex !== -1) {
+                return document.cookie.substring(cookieIndex + key.length + 1, endIndex);
+            }
+            return "";
+        },
+
+        ready: function () {
+            this.header = {"Authorization": "Bearer " + this.getCookie("token")};
         }
       });
     })();

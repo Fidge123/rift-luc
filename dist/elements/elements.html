@@ -22653,7 +22653,7 @@ module.exports = Array.isArray || function (arr) {
             width: 50%;
         }
     </style>
-    <iron-ajax id="modeLoader" auto="" url="/api/achievement" last-response="{{achievements}}"></iron-ajax>
+    <iron-ajax id="modeLoader" auto="" url="/api/achievement" last-response="{{achievements}}" headers="{{header}}"></iron-ajax>
     <h1>Achievements</h1>
     <template is="dom-repeat" items="[[achievements]]">
         <paper-material id="{{index}}" elevation="1">
@@ -22672,10 +22672,28 @@ module.exports = Array.isArray || function (arr) {
         is: 'luc-achievements',
 
         properties: {
+            header: {
+                type: Object
+            },
             achievements: {
                 type: Array,
                 notifies: true
             }
+        },
+
+        getCookie: function (key) {
+            var cookieIndex = document.cookie.indexOf(key + "=");
+            var endIndex = document.cookie.indexOf(";", cookieIndex);
+            endIndex = endIndex < cookieIndex ? document.cookie.length : endIndex;
+
+            if (cookieIndex !== -1) {
+                return document.cookie.substring(cookieIndex + key.length + 1, endIndex);
+            }
+            return "";
+        },
+
+        ready: function () {
+            this.header = {"Authorization": "Bearer " + this.getCookie("token")};
         }
       });
     })();
@@ -22693,7 +22711,7 @@ module.exports = Array.isArray || function (arr) {
         }
     </style>
     
-    <iron-ajax id="modeLoader" auto="" url="/api/halloffame" last-response="{{halloffame}}"></iron-ajax>
+    <iron-ajax id="modeLoader" auto="" url="/api/halloffame" last-response="{{halloffame}}" headers="{{header}}"></iron-ajax>
     <h1>Hall of Fame</h1>
     <template is="dom-repeat" items="[[halloffame]]">
         <paper-material id="{{index}}" elevation="1">
@@ -22714,10 +22732,28 @@ module.exports = Array.isArray || function (arr) {
         is: 'luc-halloffame',
 
         properties: {
+            header: {
+                type: Object
+            },
             halloffame: {
                 type: Array,
                 notifies: true
             }
+        },
+
+        getCookie: function (key) {
+            var cookieIndex = document.cookie.indexOf(key + "=");
+            var endIndex = document.cookie.indexOf(";", cookieIndex);
+            endIndex = endIndex < cookieIndex ? document.cookie.length : endIndex;
+
+            if (cookieIndex !== -1) {
+                return document.cookie.substring(cookieIndex + key.length + 1, endIndex);
+            }
+            return "";
+        },
+
+        ready: function () {
+            this.header = {"Authorization": "Bearer " + this.getCookie("token")};
         }
       });
     })();
@@ -22734,7 +22770,7 @@ module.exports = Array.isArray || function (arr) {
             width: 50%;
         }
     </style>
-    <iron-ajax id="modeLoader" auto="" url="/api/repeatable" last-response="{{games}}"></iron-ajax>
+    <iron-ajax id="modeLoader" auto="" url="/api/repeatable" last-response="{{games}}" headers="{{header}}"></iron-ajax>
     <h1>Repeatables</h1>
     <template is="dom-repeat" items="[[games]]">
         <paper-material id="{{index}}" elevation="1">
@@ -22753,10 +22789,28 @@ module.exports = Array.isArray || function (arr) {
         is: 'luc-repeatables',
 
         properties: {
+            header: {
+                type: Object
+            },
             games: {
                 type: Array,
                 notifies: true
             }
+        },
+
+        getCookie: function (key) {
+            var cookieIndex = document.cookie.indexOf(key + "=");
+            var endIndex = document.cookie.indexOf(";", cookieIndex);
+            endIndex = endIndex < cookieIndex ? document.cookie.length : endIndex;
+
+            if (cookieIndex !== -1) {
+                return document.cookie.substring(cookieIndex + key.length + 1, endIndex);
+            }
+            return "";
+        },
+
+        ready: function () {
+            this.header = {"Authorization": "Bearer " + this.getCookie("token")};
         }
       });
     })();

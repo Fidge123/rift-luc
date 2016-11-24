@@ -15,7 +15,8 @@
     <iron-ajax
         id="modeLoader" auto
         url="/api/achievement"
-        last-response="{{achievements}}"></iron-ajax>
+        last-response="{{achievements}}"
+        headers="{{header}}"></iron-ajax>
     <h1>Achievements</h1>
     <template is="dom-repeat" items="[[achievements]]">
         <paper-material id="{{index}}" elevation="1">
@@ -34,10 +35,28 @@
         is: 'luc-achievements',
 
         properties: {
+            header: {
+                type: Object
+            },
             achievements: {
                 type: Array,
                 notifies: true
             }
+        },
+
+        getCookie: function (key) {
+            var cookieIndex = document.cookie.indexOf(key + "=");
+            var endIndex = document.cookie.indexOf(";", cookieIndex);
+            endIndex = endIndex < cookieIndex ? document.cookie.length : endIndex;
+
+            if (cookieIndex !== -1) {
+                return document.cookie.substring(cookieIndex + key.length + 1, endIndex);
+            }
+            return "";
+        },
+
+        ready: function () {
+            this.header = {"Authorization": "Bearer " + this.getCookie("token")};
         }
       });
     })();
