@@ -173,9 +173,9 @@
         },
 
         handleAchievements: function () {
+            var that = this;
             var response = document.getElementById("a_pam").lastResponse;
             if (!this.aList) {
-                var that = this;
                 setTimeout(function () {
                     console.log("waiting A");
                     that.handleAchievements(response);
@@ -210,9 +210,10 @@
         },
 
         handlePlayerInfo: function () {
+            var pid = this.pid;
             var response = document.getElementById("a_player").lastResponse;
             var data = response.filter(function (d) {
-                return d.id === this.pid;
+                return d.id === pid;
             })[0];
             this.place = response.indexOf(data) + 1;
             this.player = data.leaguename;
