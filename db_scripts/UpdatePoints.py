@@ -210,7 +210,7 @@ def calculate_achievements(settings, match, game, cursor):
                 i == 38 and player["largestkillingspree"] > 8 or
                 i == 39 and player["largestkillingspree"] > 12 or
                 i == 40 and match.get("spell1", 4) != 4 and match.get("spell2", 4) != 4 or
-                i == 41 and game.get("matchDuration", 1500) < 3600 or
+                i == 41 and game.get("matchDuration", 1500) > 3600 or
                 i == 42 and player["stealthamount"] >= 3 or
                 i == 43 and three_stealth(settings["player_id"], cursor) or
                 i == 44 and player["voidamount"] >= 3 or
