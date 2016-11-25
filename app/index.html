@@ -39,12 +39,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <paper-scroll-header-panel main id="headerPanelMain" fixed>
         <paper-toolbar id="mainToolbar" class="medium" justify="start">
-            <a data-route="home" href="{{baseUrl}}profile">
-                <span class="top title">LUC</span>
-            </a>
-            <a data-route="achievements" href="{{baseUrl}}achievements">Achievements</a>
-            <!-- <a data-route="halloffame" href="{{baseUrl}}halloffame">Hall of Fame</a> -->
-            <a data-route="repeatables" href="{{baseUrl}}repeatables">Repeatables</a>
+            <div class="header">
+                <a data-route="home" href="{{baseUrl}}profile">
+                    <span class="top title">LUC</span>
+                </a>
+                <a data-route="achievements" href="{{baseUrl}}achievements">Achievements</a>
+                <!-- <a data-route="halloffame" href="{{baseUrl}}halloffame">Hall of Fame</a> -->
+                <a data-route="repeatables" href="{{baseUrl}}repeatables">Repeatables</a>
+            </div>
         </paper-toolbar>
 
         <iron-pages attr-for-selected="data-route" selected="{{route}}">
