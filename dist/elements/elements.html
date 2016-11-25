@@ -22354,7 +22354,7 @@ module.exports = Array.isArray || function (arr) {
                 <img class="icon" src$="{{src}}">
                 <div class="name">{{player}}</div>
                 <div class="overall">
-                    
+                    <div>{{place}}. Platz</div>
                     <div>{{points}} Punkte</div>
                 </div>
             </div>
@@ -22482,7 +22482,6 @@ module.exports = Array.isArray || function (arr) {
                     points: points,
                     count: response.length
                 };
-                this.points += points;
             }
         },
 
@@ -22504,7 +22503,6 @@ module.exports = Array.isArray || function (arr) {
                 this.repeatables = {
                     points: points
                 };
-                this.points += points;
             }
         },
 
@@ -22518,6 +22516,7 @@ module.exports = Array.isArray || function (arr) {
             if (index > -1) {
                 this.place = index + 1;
                 this.player = data.leaguename;
+                this.points = data.points;
                 this.src = "http://ddragon.leagueoflegends.com/cdn/6.23.1/img/profileicon/" + data.iconid + ".png"
             } else {
                 console.log(response);
