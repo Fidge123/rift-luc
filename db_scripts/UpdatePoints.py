@@ -146,10 +146,12 @@ def free_to_play(player_id, cursor):
     cursor.execute(F2P_SELECT, (player_id,))
     return cursor.fetchone()[0] >= 10
 
-def update_achievement_tables(settings, achievement_id, cursor):
+def update_achievement_tables(settings, achievement_id, points, cursor):
     """Insert achievement into table if it doesnt exist yet"""
     pid = settings["player_id"]
     reg = settings["region"]
+
+    cursor.execute(P_UPDATE, (points, pid))
 
     cursor.execute(PAM_SELECT, (pid, reg, achievement_id))
     if cursor.rowcount == 0:
@@ -221,7 +223,7 @@ def calculate_achievements(settings, match, game, cursor):
                 i == 51 and player["teemoamount"] == 4 or
                 i == 52 and False or
                 i == 53 and free_to_play(settings["player_id"], cursor)):
-            update_achievement_tables(settings, i, cursor)
+            update_achievement_tables(settings, i, achievement[1], cursor)
 
 def calculate_points(settings, match):
     """Main function"""
