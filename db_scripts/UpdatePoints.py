@@ -151,10 +151,9 @@ def update_achievement_tables(settings, achievement_id, points, cursor):
     pid = settings["player_id"]
     reg = settings["region"]
 
-    cursor.execute(P_UPDATE, (points, pid))
-
     cursor.execute(PAM_SELECT, (pid, reg, achievement_id))
     if cursor.rowcount == 0:
+        cursor.execute(P_UPDATE, (points, pid))
         cursor.execute(PAM_INSERT, (pid, reg, achievement_id, settings["match_id"]))
 
 def calculate_achievements(settings, match, game, cursor):
