@@ -33,7 +33,14 @@ def copy_from_users():
         cursor.execute(query, (user["leaguename"], user["region"]))
         if cursor.rowcount == 0:
             url = "https://" + user["region"] + ".api.pvp.net/api/lol/" + user["region"] + "/v1.4/summoner/by-name/" + user["leaguename"]
-            player = json.loads(requests.get(url, params=KEY).text)[user["leaguename"].lower().replace(" ", "")]
+            response = requests.get(url, params=KEY)
+            while response.status_code != 200:
+                if response.status_code == 404:
+                    return
+                print(str(response.status_code) + ": Request failed, waiting 10 seconds")
+                time.sleep(10)
+                response = requests.get(url, params=KEY)
+            player = json.loads(response.text)[user["leaguename"].lower().replace(" ", "")]
             query = "INSERT INTO player (id, leaguename, region, iconid, created) VALUES (%s,%s,%s,%s,%s);"
             timestamp = int(round(time.time()*1000))
             data = (player["id"], user["leaguename"], user["region"], player["profileIconId"], timestamp)
