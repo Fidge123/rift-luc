@@ -270,6 +270,21 @@ BEGIN
 END;
 $$;
 
+create function util.env_var(v text) returns text as $$
+  declare
+    result text;
+  begin
+    begin
+      select current_setting(v) into result;
+    exception 
+      when undefined_object then
+        return null;
+    end;
+
+    return result;
+  end;
+$$ stable language plpgsql;
+
 ALTER DATABASE luc SET postgrest.claims.id TO '';
 ALTER DATABASE luc SET postgrest.claims.region TO '';
 CREATE OR REPLACE FUNCTION current_id() RETURNS current_id_type
