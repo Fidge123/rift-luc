@@ -270,19 +270,19 @@ BEGIN
 END;
 $$;
 
-create function util.env_var(v text) returns text as $$
-  declare
-    result text;
-  begin
-    begin
-      select current_setting(v) into result;
-    exception 
-      when undefined_object then
+CREATE FUNCTION env_var(v text) RETURNS text AS $$
+  DECLARE
+    RESULT text;
+  BEGIN
+    BEGIN
+      SELECT current_setting(v) INTO RESULT;
+    EXCEPTION 
+      WHEN undefined_object THEN
         return null;
-    end;
+    END;
 
     return result;
-  end;
+  END;
 $$ stable language plpgsql;
 
 ALTER DATABASE luc SET postgrest.claims.id TO '';
