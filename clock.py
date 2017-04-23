@@ -5,7 +5,7 @@ from os import environ
 file = open('key', 'w+')
 file.write(environ["KEY"])
 
-DATABASE_NAME = re.split("/", environ["DATABASE_URL"])[-1]
+DATABASE_NAME = environ["DATABASE_URL"].split("/")[-1]
 with open("src/DatabaseCreation.sql", "r+") as myfile:
     data = myfile.read().replace("\n","")
     data.replace("luc", DATABASE_NAME)
