@@ -22,7 +22,9 @@ with open("key") as file:
 #
 # CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
 
-CONN_STRING = "host=" + environ['HOST'] + " dbname=" + environ['DBNAME'] + " user=" + environ['USER'] + " password=" + environ['PW']
+CONN_STRING = environ["DATABASE_URL"]
+# local way
+# "host=" + environ['HOST'] + " dbname=" + environ['DBNAME'] + " user=" + environ['USER'] + " password=" + environ['PW']
 
 def get_all_recent_matches():
     """Get recent matches for all players"""

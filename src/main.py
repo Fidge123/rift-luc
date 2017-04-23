@@ -23,7 +23,9 @@ import FillRepeatableTable
 #
 # CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
 
-CONN_STRING = "host=" + environ['HOST'] + " dbname=" + environ['DBNAME'] + " user=" + environ['USER'] + " password=" + environ['PW']
+CONN_STRING = environ["DATABASE_URL"]
+# local way
+# "host=" + environ['HOST'] + " dbname=" + environ['DBNAME'] + " user=" + environ['USER'] + " password=" + environ['PW']
 
 def usage():
     """Show usage help"""

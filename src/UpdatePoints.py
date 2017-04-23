@@ -20,7 +20,9 @@ with open("key") as file:
 #
 # CONN_STRING = "host=" + HOST + " dbname=" + DBNAME + " user=" + USER + " password=" + PASS
 
-CONN_STRING = "host=" + environ['HOST'] + " dbname=" + environ['DBNAME'] + " user=" + environ['USER'] + " password=" + environ['PW']
+CONN_STRING = environ["DATABASE_URL"]
+# local way
+# "host=" + environ['HOST'] + " dbname=" + environ['DBNAME'] + " user=" + environ['USER'] + " password=" + environ['PW']
 
 ### Common queries ###
 P_UPDATE = "UPDATE player SET points = points + %s WHERE id = %s;"
