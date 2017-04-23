@@ -272,7 +272,7 @@ $$;
 
 CREATE FUNCTION env_var(v text) RETURNS text AS $$
   DECLARE
-    RESULT text;
+    result text;
   BEGIN
     BEGIN
       SELECT current_setting(v) INTO RESULT;
