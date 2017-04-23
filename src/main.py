@@ -120,7 +120,7 @@ def main():
             elif opt[0] == "--verify":
                 Player.copy_from_users()
             elif opt[0] == "--reset":
-                delete()
+                #delete()
                 create()
                 fill(opts)
             elif opt[0] == "--start":
