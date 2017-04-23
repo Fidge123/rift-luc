@@ -52,7 +52,7 @@ def create():
     """Create tables"""
     conn = psycopg2.connect(CONN_STRING)
     with conn.cursor() as cursor:
-        cursor.execute(open("db_scripts/DatabaseCreation.sql", "r").read())
+        cursor.execute(open("src/DatabaseCreation.sql", "r").read())
     conn.commit()
     conn.close()
 
