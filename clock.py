@@ -1,6 +1,9 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 import os
+from os import environ
 
+file = open('key', 'w+')
+file.write(environ["KEY"])
 os.system("src/main.py --reset")
 sched = BlockingScheduler()
 
